@@ -2663,104 +2663,48 @@ function initLoginPage() {
     })(toggleBtns[i]);
   }
   
-  /* Google sign in - ONE TAP (No Redirects, Matches Signup) */
-  
-  // Save user to DB if they somehow don't exist (using correct schema)
-  function saveGoogleLoginUser(user) {
-    var emailKey = user.email.replace(/\./g, '_');
-    return database.ref('users/' + emailKey).once('value').then(function(snap) {
-      if (!snap.exists()) {
-        return database.ref('users/' + emailKey).set({
-          name: user.displayName || 'User',
-          email: user.email,
-          phone: '',
-          country: 'Unknown',
-          age: '',
-          emailVerified: true,
-          createdAt: Date.now()
+    // ============================================
+    // GOOGLE REDIRECT LOGIN
+    // ============================================
+    
+    // 1. Catch user returning from Google
+    firebase.auth().getRedirectResult().then(function(result) {
+      if (result.user) {
+        var user = result.user;
+        var emailKey = user.email.replace(/\./g, '_');
+        
+        // Ensure user profile exists in DB
+        return firebase.database().ref('users/' + emailKey).once('value').then(function(snap) {
+          if (!snap.exists()) {
+            return firebase.database().ref('users/' + emailKey).set({
+              name: user.displayName || 'User',
+              email: user.email,
+              phone: '',
+              country: 'Unknown',
+              age: '',
+              emailVerified: true,
+              createdAt: Date.now()
+            });
+          }
+        }).then(function() {
+          showToast('Welcome back!', 'success');
+          setTimeout(function() { window.location.href = 'index.html'; }, 1000);
         });
       }
-    });
-  }
-  
-  // Handle Google's One Tap response
-  function handleGoogleLoginCallback(response) {
-    if (!response.credential) return;
-    
-    var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
-    
-    auth.signInWithCredential(credential).then(function(result) {
-      var user = result.user;
-      
-      // 1. Ensure profile exists
-      var profilePromise = saveGoogleLoginUser(user);
-      
-      // 2. Register device for Google login (Keeping your ADLL logic)
-      var devicePromise;
-      if (typeof ADLL !== 'undefined') {
-        devicePromise = ADLL.registerDevice(user.uid);
-      } else {
-        devicePromise = Promise.resolve();
-      }
-      
-      return Promise.all([profilePromise, devicePromise]);
-      
-    }).then(function() {
-      showToast('Welcome back!', 'success');
-      setTimeout(function() { window.location.href = 'profile.html'; }, 600);
     }).catch(function(err) {
+      if (err.code === 'auth/redirect-cancelled-by-user') return;
       console.error('Google Auth Error:', err);
-      if (err.code !== 'auth/popup-closed-by-user') {
-        showToast(getAuthErrorMessage(err.code) || 'Google sign-in failed.', 'error');
-      }
-    });
-  }
-  
-  // Initialize Google One Tap for Login
-  function initGoogleLogin() {
-    if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
-      console.warn('Google GSI script not loaded for login.');
-      return;
-    }
-    
-    // !!! PASTE YOUR EXACT WEB CLIENT ID HERE !!!
-    var clientId = '179015046758-ejdilm103uk7cq6jtjtrmueaqdv6bojk.apps.googleusercontent.com';
-    
-    google.accounts.id.initialize({
-      client_id: clientId,
-      callback: handleGoogleLoginCallback,
-      cancel_on_tap_outside: false,
+      showToast('Google sign-in failed.', 'error');
     });
     
-    // Show the popup
-    google.accounts.id.prompt(function(notification) {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        console.log('One Tap skipped on login page.');
-      }
-    });
-    
-    // Fallback: If they close the popup, clicking the button opens it again
+    // 2. The Button Click
     var googleBtn = document.getElementById('google-login-btn');
     if (googleBtn) {
       googleBtn.addEventListener('click', function() {
-        google.accounts.id.prompt();
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithRedirect(provider);
       });
     }
-  }
-  
-  // Smart loader to wait for Google Script
-  function setupGoogleLogin() {
-    var gsiScript = document.getElementById('gsi-script');
-    if (gsiScript && gsiScript.onload) {
-      gsiScript.onload = initGoogleLogin;
-    } else if (typeof google !== 'undefined' && google.accounts) {
-      initGoogleLogin();
-    } else {
-      setTimeout(initGoogleLogin, 1500);
-    }
-  }
-  
-  setupGoogleLogin();
   
   /* Email form submit */
   form.addEventListener('submit', function(e) {
@@ -2918,105 +2862,59 @@ if (passwordInput) {
   });
 }
   
-  /* Google Sign Up - ONE TAP (No Redirects) */
+  /* Google sign up - REDIRECT METHOD */
   
-  // 1. Save user data to database
-  function saveGoogleUserToDatabase(user) {
-    var emailKey = user.email.replace(/\./g, '_');
-    return database.ref('users/' + emailKey).once('value').then(function(snap) {
-      if (!snap.exists()) {
-        return database.ref('users/' + emailKey).set({
-          name: user.displayName || 'User',
-          email: user.email,
-          phone: '',
-          country: 'Unknown',
-          age: '',
-          emailVerified: true,
-          createdAt: Date.now()
-        });
-      }
-    });
-  }
-  
-  // 2. Handle Google's response
-  function handleGoogleCallback(response) {
-    if (!response.credential) return;
-    
-    var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
-    
-    auth.signInWithCredential(credential).then(function(result) {
+  // 1. Check if user is returning from Google redirect
+  auth.getRedirectResult().then(function(result) {
+    if (result.user) {
       var isNewUser = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+      var user = result.user;
       
-      return saveGoogleUserToDatabase(result.user).then(function() {
-        if (isNewUser) {
+      if (!user.email) {
+        showToast('Could not get email from Google account.', 'error');
+        return;
+      }
+      
+      var emailKey = user.email.replace(/\./g, '_');
+      
+      if (isNewUser) {
+        database.ref('users/' + emailKey).once('value').then(function(snap) {
+          if (!snap.exists()) {
+            return database.ref('users/' + emailKey).set({
+              name: user.displayName || 'User',
+              email: user.email,
+              phone: '',
+              country: 'Unknown',
+              age: '',
+              emailVerified: true,
+              createdAt: Date.now()
+            });
+          }
+        }).then(function() {
           showToast('Welcome to xStream!', 'success');
-        } else {
-          showToast('Welcome back!', 'success');
-        }
+          setTimeout(function() { window.location.href = 'profile.html'; }, 600);
+        }).catch(function(error) {
+          console.error('Google signup DB error:', error);
+          showToast('Failed to save account. Please try again.', 'error');
+        });
+      } else {
+        showToast('Welcome back!', 'success');
         setTimeout(function() { window.location.href = 'profile.html'; }, 600);
-      });
-    }).catch(function(err) {
-      console.error('Google Auth Error:', err);
-      if (err.code !== 'auth/popup-closed-by-user') {
-        showToast('Google sign-in failed. Try again.', 'error');
       }
+    }
+  }).catch(function(err) {
+    if (err.code === 'auth/redirect-cancelled-by-user') return;
+    console.error('Google Auth error:', err);
+  });
+  
+  // 2. The Button Click (Sends user straight to Google)
+  var googleBtn = document.getElementById('google-signup-btn');
+  if (googleBtn) {
+    googleBtn.addEventListener('click', function() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithRedirect(provider);
     });
   }
-  
-  // 3. Initialize the One Tap popup
-  function initGoogleOneTap() {
-    // Final safety check
-    if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
-      console.error('Google GSI failed to load.');
-      return;
-    }
-    
-    // !!! PASTE YOUR EXACT WEB CLIENT ID HERE !!!
-    var clientId = '179015046758-ejdilm103uk7cq6jtjtrmueaqdv6bojk.apps.googleusercontent.com';
-    
-    google.accounts.id.initialize({
-      client_id: clientId,
-      callback: handleGoogleCallback,
-      cancel_on_tap_outside: false,
-    });
-    
-    // Show the popup
-    google.accounts.id.prompt(function(notification) {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-        console.log('One Tap was skipped or closed.');
-      }
-    });
-    
-    // Attach to your custom button as a fallback
-    var googleBtn = document.getElementById('google-signup-btn');
-    if (googleBtn) {
-      googleBtn.addEventListener('click', function() {
-        google.accounts.id.prompt();
-      });
-    }
-  }
-  
-  // 4. SMART LOADER: Wait for the script to finish downloading, then start
-  function setupGoogleLogin() {
-    var gsiScript = document.getElementById('gsi-script');
-    
-    if (gsiScript) {
-      // This triggers the exact moment the Google script is ready
-      gsiScript.onload = function() {
-        console.log('Google GSI loaded successfully!');
-        initGoogleOneTap();
-      };
-      gsiScript.onerror = function() {
-        console.error('Failed to download Google GSI script.');
-      };
-    } else {
-      // Fallback if script tag is missing
-      setTimeout(initGoogleOneTap, 1500);
-    }
-  }
-  
-  // Start the loader
-  setupGoogleLogin();
   
 /* ============================================
      Form submit — REDIRECT TO OTP VERIFICATION
