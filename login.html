@@ -137,16 +137,19 @@
     })();
   </script>
   
-  <!-- 3. Google Identity Services (One Tap) - Load only ONCE -->
-  <script src="https://accounts.google.com/gsi/client" id="gsi-script" defer></script>
-  
-  <!-- 4. EmailJS SDK -->
+  <!-- 3. EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   
-  <!-- 5. Security & App Scripts -->
+  <!-- 4. Security & App Scripts -->
   <script src="js/optimizer.js"></script>
   <script src="js/threat.js"></script>
   <script src="config.js"></script>
+  
+  <!-- 5. KILL OLD LOGIN LOGIC (Prevents app.js from crashing the page) -->
+  <script>
+    function initLoginPage() { return false; }
+  </script>
+
   <script src="js/app.js"></script>
   <script src="js/FP.js"></script>
 
@@ -156,9 +159,13 @@
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     
-    // Initialize Forgot Password module
-    if (typeof ForgotPassword !== 'undefined') {
-      ForgotPassword.init({ debug: true });
+    // Initialize Forgot Password safely
+    try {
+      if (typeof ForgotPassword !== 'undefined') {
+        ForgotPassword.init({ debug: true });
+      }
+    } catch(e) {
+      console.warn('ForgotPassword init skipped:', e);
     }
 
     // ============================================
@@ -275,14 +282,12 @@
     });
 
     // ============================================
-    // GOOGLE ONE TAP LOGIN (Replaces broken popup)
+    // GOOGLE REDIRECT LOGIN
     // ============================================
-    function handleGoogleLoginCallback(response) {
-      if (!response.credential) return;
-      
-      var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
-      
-      firebase.auth().signInWithCredential(credential).then(function(result) {
+    
+    // 1. Catch user returning from Google
+    firebase.auth().getRedirectResult().then(function(result) {
+      if (result.user) {
         var user = result.user;
         
         // Ensure user profile exists in DB using correct email key format
@@ -303,47 +308,21 @@
           showToast('Welcome back!', 'success');
           setTimeout(function() { window.location.href = 'index.html'; }, 1000);
         });
-      }).catch(function(err) {
-        console.error('Google Auth Error:', err);
-        if (err.code !== 'auth/popup-closed-by-user') {
-          showToast('Google sign-in failed.', 'error');
-        }
-      });
-    }
-
-    function initGoogleLogin() {
-      if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) return;
-
-      // !!! PASTE YOUR EXACT WEB CLIENT ID HERE !!!
-      var clientId = '179015046758-ejdilm103uk7cq6j...apps.googleusercontent.com'; 
-
-      google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleGoogleLoginCallback,
-        cancel_on_tap_outside: false,
-      });
-
-      google.accounts.id.prompt(function(notification) {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          console.log('One Tap skipped on login page.');
-        }
-      });
-
-      // Fallback if they close the popup
-      var googleBtn = document.getElementById('google-login-btn');
-      if (googleBtn) {
-        googleBtn.addEventListener('click', function() {
-          google.accounts.id.prompt();
-        });
       }
-    }
+    }).catch(function(err) {
+      // Ignore if user manually closed the Google page
+      if (err.code === 'auth/redirect-cancelled-by-user') return;
+      console.error('Google Auth Error:', err);
+      showToast('Google sign-in failed.', 'error');
+    });
 
-    // Smart loader for Google Script
-    var gsiScript = document.getElementById('gsi-script');
-    if (gsiScript) {
-      gsiScript.onload = initGoogleLogin;
-    } else {
-      setTimeout(initGoogleLogin, 1500);
+    // 2. The Button Click (Sends user straight to Google)
+    var googleBtn = document.getElementById('google-login-btn');
+    if (googleBtn) {
+      googleBtn.addEventListener('click', function() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithRedirect(provider);
+      });
     }
 
     // Auth State Observer
