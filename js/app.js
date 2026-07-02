@@ -238,7 +238,7 @@ function buildNavigation() {
       '</div>' +
       '</div>';
   } else {
-    authHTML = '<a href="login.html" class="btn-outline" style="padding:7px 18px; font-size:0.85rem;">Sign In</a>' +
+    authHTML = '<a href="login.html" class="btn-outline" style="padding:7px 18px; font-size:0.85rem;">login</a>' +
       '<a href="signup.html" class="btn-accent" style="padding:7px 18px; font-size:0.85rem;">Sign Up</a>';
   }
   
@@ -2663,58 +2663,104 @@ function initLoginPage() {
     })(toggleBtns[i]);
   }
   
-  /* Google sign in */
-  var googleBtn = document.getElementById('google-login-btn');
-  if (googleBtn) {
-    googleBtn.addEventListener('click', function() {
-      var provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).then(function(result) {
-        var isNewUser = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
-        var user = result.user;
-        
-        /* Register device for Google login */
-        var devicePromise;
-        if (typeof ADLL !== 'undefined') {
-          devicePromise = ADLL.registerDevice(user.uid);
-        } else {
-          devicePromise = Promise.resolve();
-        }
-        
-        if (isNewUser) {
-          database.ref('users/' + user.uid).once('value').then(function(snap) {
-            if (!snap.exists()) {
-              return database.ref('users/' + user.uid).set({
-                fullName: user.displayName || 'User',
-                email: user.email || '',
-                country: 'Unknown',
-                age: '',
-                emailVerified: true,
-                createdAt: Date.now()
-              });
-            }
-          }).then(function() {
-            return devicePromise;
-          }).then(function() {
-            window.location.href = 'profile.html';
-          }).catch(function() {
-            return devicePromise.then(function() {
-              window.location.href = 'profile.html';
-            });
-          });
-        } else {
-          devicePromise.then(function() {
-            window.location.href = 'profile.html';
-          });
-        }
-      }).catch(function(err) {
-        if (err.code === 'auth/popup-closed-by-user') {
-          showToast('Sign-in popup was closed', 'warning');
-        } else {
-          showToast(getAuthErrorMessage(err.code), 'error');
-        }
-      });
+  /* Google sign in - ONE TAP (No Redirects, Matches Signup) */
+  
+  // Save user to DB if they somehow don't exist (using correct schema)
+  function saveGoogleLoginUser(user) {
+    var emailKey = user.email.replace(/\./g, '_');
+    return database.ref('users/' + emailKey).once('value').then(function(snap) {
+      if (!snap.exists()) {
+        return database.ref('users/' + emailKey).set({
+          name: user.displayName || 'User',
+          email: user.email,
+          phone: '',
+          country: 'Unknown',
+          age: '',
+          emailVerified: true,
+          createdAt: Date.now()
+        });
+      }
     });
   }
+  
+  // Handle Google's One Tap response
+  function handleGoogleLoginCallback(response) {
+    if (!response.credential) return;
+    
+    var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
+    
+    auth.signInWithCredential(credential).then(function(result) {
+      var user = result.user;
+      
+      // 1. Ensure profile exists
+      var profilePromise = saveGoogleLoginUser(user);
+      
+      // 2. Register device for Google login (Keeping your ADLL logic)
+      var devicePromise;
+      if (typeof ADLL !== 'undefined') {
+        devicePromise = ADLL.registerDevice(user.uid);
+      } else {
+        devicePromise = Promise.resolve();
+      }
+      
+      return Promise.all([profilePromise, devicePromise]);
+      
+    }).then(function() {
+      showToast('Welcome back!', 'success');
+      setTimeout(function() { window.location.href = 'profile.html'; }, 600);
+    }).catch(function(err) {
+      console.error('Google Auth Error:', err);
+      if (err.code !== 'auth/popup-closed-by-user') {
+        showToast(getAuthErrorMessage(err.code) || 'Google sign-in failed.', 'error');
+      }
+    });
+  }
+  
+  // Initialize Google One Tap for Login
+  function initGoogleLogin() {
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+      console.warn('Google GSI script not loaded for login.');
+      return;
+    }
+    
+    // !!! PASTE YOUR EXACT WEB CLIENT ID HERE !!!
+    var clientId = '179015046758-ejdilm103uk7cq6jtjtrmueaqdv6bojk.apps.googleusercontent.com';
+    
+    google.accounts.id.initialize({
+      client_id: clientId,
+      callback: handleGoogleLoginCallback,
+      cancel_on_tap_outside: false,
+    });
+    
+    // Show the popup
+    google.accounts.id.prompt(function(notification) {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        console.log('One Tap skipped on login page.');
+      }
+    });
+    
+    // Fallback: If they close the popup, clicking the button opens it again
+    var googleBtn = document.getElementById('google-login-btn');
+    if (googleBtn) {
+      googleBtn.addEventListener('click', function() {
+        google.accounts.id.prompt();
+      });
+    }
+  }
+  
+  // Smart loader to wait for Google Script
+  function setupGoogleLogin() {
+    var gsiScript = document.getElementById('gsi-script');
+    if (gsiScript && gsiScript.onload) {
+      gsiScript.onload = initGoogleLogin;
+    } else if (typeof google !== 'undefined' && google.accounts) {
+      initGoogleLogin();
+    } else {
+      setTimeout(initGoogleLogin, 1500);
+    }
+  }
+  
+  setupGoogleLogin();
   
   /* Email form submit */
   form.addEventListener('submit', function(e) {
@@ -2832,175 +2878,250 @@ function initSignupPage() {
     })(toggleBtns[i]);
   }
   
-  /* Password strength meter */
-  var passwordInput = document.getElementById('signup-password');
-  if (passwordInput) {
-    passwordInput.addEventListener('input', function() {
-      var val = passwordInput.value;
-      var fill = document.getElementById('strength-fill');
-      var text = document.getElementById('strength-text');
-      if (!fill || !text) return;
-      
-      var score = 0;
-      if (val.length >= 8) score++;
-      if (val.length >= 12) score++;
-      if (/[A-Z]/.test(val)) score++;
-      if (/[0-9]/.test(val)) score++;
-      if (/[^A-Za-z0-9]/.test(val)) score++;
-      var levels = [
-        { width: '0%', color: 'transparent', label: '' },
-        { width: '20%', color: '#e74c3c', label: 'Weak' },
-        { width: '40%', color: '#e67e22', label: 'Fair' },
-        { width: '60%', color: '#f1c40f', label: 'Good' },
-        { width: '80%', color: '#2ecc71', label: 'Strong' },
-        { width: '100%', color: '#27ae60', label: 'Excellent' }
-      ];
-      var level = val.length === 0 ? levels[0] : levels[Math.min(score, 5)];
-      fill.style.width = level.width;
-      fill.style.background = level.color;
-      text.textContent = level.label;
-      text.style.color = level.color;
-      
-      var confirmInput = document.getElementById('signup-confirm-password');
-      var confirmError = document.getElementById('signup-confirm-password-error');
-      if (confirmInput && confirmError && confirmInput.value.length > 0) {
-        if (confirmInput.value === val) {
-          confirmError.textContent = '';
-          confirmInput.style.borderColor = '';
-        }
+/* Password strength meter */
+var passwordInput = document.getElementById('signup-password');
+if (passwordInput) {
+  passwordInput.addEventListener('input', function() {
+    var val = passwordInput.value;
+    var fill = document.getElementById('strength-fill');
+    var text = document.getElementById('strength-text');
+    if (!fill || !text) return;
+    
+    var score = 0;
+    if (val.length >= 6) score++;
+    if (val.length >= 12) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    var levels = [
+      { width: '0%', color: 'transparent', label: '' },
+      { width: '20%', color: '#e74c3c', label: 'Weak' },
+      { width: '40%', color: '#e67e22', label: 'Fair' },
+      { width: '60%', color: '#f1c40f', label: 'Good' },
+      { width: '80%', color: '#2ecc71', label: 'Strong' },
+      { width: '100%', color: '#27ae60', label: 'Excellent' }
+    ];
+    var level = val.length === 0 ? levels[0] : levels[Math.min(score, 5)];
+    fill.style.width = level.width;
+    fill.style.background = level.color;
+    text.textContent = level.label;
+    text.style.color = level.color;
+    
+    var confirmInput = document.getElementById('signup-confirm-password');
+    var confirmError = document.getElementById('signup-confirm-password-error');
+    if (confirmInput && confirmError && confirmInput.value.length > 0) {
+      if (confirmInput.value === val) {
+        confirmError.textContent = '';
+        confirmInput.style.borderColor = '';
+      }
+    }
+  });
+}
+  
+  /* Google Sign Up - ONE TAP (No Redirects) */
+  
+  // 1. Save user data to database
+  function saveGoogleUserToDatabase(user) {
+    var emailKey = user.email.replace(/\./g, '_');
+    return database.ref('users/' + emailKey).once('value').then(function(snap) {
+      if (!snap.exists()) {
+        return database.ref('users/' + emailKey).set({
+          name: user.displayName || 'User',
+          email: user.email,
+          phone: '',
+          country: 'Unknown',
+          age: '',
+          emailVerified: true,
+          createdAt: Date.now()
+        });
       }
     });
   }
   
-  /* Google sign up (unchanged — no OTP needed for Google) */
-  var googleBtn = document.getElementById('google-signup-btn');
-  if (googleBtn) {
-    googleBtn.addEventListener('click', function() {
-      var provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).then(function(result) {
-        var isNewUser = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+  // 2. Handle Google's response
+  function handleGoogleCallback(response) {
+    if (!response.credential) return;
+    
+    var credential = firebase.auth.GoogleAuthProvider.credential(response.credential);
+    
+    auth.signInWithCredential(credential).then(function(result) {
+      var isNewUser = result.additionalUserInfo && result.additionalUserInfo.isNewUser;
+      
+      return saveGoogleUserToDatabase(result.user).then(function() {
         if (isNewUser) {
-          var user = result.user;
-          database.ref('users/' + user.uid).once('value').then(function(snap) {
-            if (!snap.exists()) {
-              return database.ref('users/' + user.uid).set({
-                fullName: user.displayName || 'User',
-                email: user.email || '',
-                country: 'Unknown',
-                age: '',
-                emailVerified: true,
-                createdAt: Date.now()
-              });
-            }
-          }).then(function() {
-            showToast('Welcome to xStream!', 'success');
-            setTimeout(function() { window.location.href = 'profile.html'; }, 600);
-          }).catch(function() {
-            showToast('Welcome to xStream!', 'success');
-            setTimeout(function() { window.location.href = 'profile.html'; }, 600);
-          });
+          showToast('Welcome to xStream!', 'success');
         } else {
           showToast('Welcome back!', 'success');
-          setTimeout(function() { window.location.href = 'profile.html'; }, 600);
         }
-      }).catch(function(err) {
-        showToast(getAuthErrorMessage(err.code), 'error');
+        setTimeout(function() { window.location.href = 'profile.html'; }, 600);
       });
+    }).catch(function(err) {
+      console.error('Google Auth Error:', err);
+      if (err.code !== 'auth/popup-closed-by-user') {
+        showToast('Google sign-in failed. Try again.', 'error');
+      }
     });
   }
   
-  /* ============================================
+  // 3. Initialize the One Tap popup
+  function initGoogleOneTap() {
+    // Final safety check
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+      console.error('Google GSI failed to load.');
+      return;
+    }
+    
+    // !!! PASTE YOUR EXACT WEB CLIENT ID HERE !!!
+    var clientId = '179015046758-ejdilm103uk7cq6jtjtrmueaqdv6bojk.apps.googleusercontent.com';
+    
+    google.accounts.id.initialize({
+      client_id: clientId,
+      callback: handleGoogleCallback,
+      cancel_on_tap_outside: false,
+    });
+    
+    // Show the popup
+    google.accounts.id.prompt(function(notification) {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        console.log('One Tap was skipped or closed.');
+      }
+    });
+    
+    // Attach to your custom button as a fallback
+    var googleBtn = document.getElementById('google-signup-btn');
+    if (googleBtn) {
+      googleBtn.addEventListener('click', function() {
+        google.accounts.id.prompt();
+      });
+    }
+  }
+  
+  // 4. SMART LOADER: Wait for the script to finish downloading, then start
+  function setupGoogleLogin() {
+    var gsiScript = document.getElementById('gsi-script');
+    
+    if (gsiScript) {
+      // This triggers the exact moment the Google script is ready
+      gsiScript.onload = function() {
+        console.log('Google GSI loaded successfully!');
+        initGoogleOneTap();
+      };
+      gsiScript.onerror = function() {
+        console.error('Failed to download Google GSI script.');
+      };
+    } else {
+      // Fallback if script tag is missing
+      setTimeout(initGoogleOneTap, 1500);
+    }
+  }
+  
+  // Start the loader
+  setupGoogleLogin();
+  
+/* ============================================
      Form submit — REDIRECT TO OTP VERIFICATION
      ============================================ */
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    clearFormErrors('signup');
-    
-    var name = document.getElementById('signup-name').value.trim();
-    var email = document.getElementById('signup-email').value.trim();
-    var password = document.getElementById('signup-password').value;
-    var confirmPassword = document.getElementById('signup-confirm-password').value;
-    var country = document.getElementById('signup-country').value;
-    var age = parseInt(document.getElementById('signup-age').value);
-    var agreeTerms = document.getElementById('agree-terms').checked;
-    
-    /* Validation */
-    var valid = true;
-    if (!name || name.length < 2) {
-      showFormError('signup-name', 'Full name must be at least 2 characters');
-      valid = false;
-    }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      showFormError('signup-email', 'Please enter a valid email address');
-      valid = false;
-    }
-    if (!password || password.length < 8) {
-      showFormError('signup-password', 'Password must be at least 8 characters');
-      valid = false;
-    }
-    if (password !== confirmPassword) {
-      showFormError('signup-confirm-password', 'Passwords do not match');
-      valid = false;
-    }
-    if (!country) {
-      showFormError('signup-country', 'Please select your country');
-      valid = false;
-    }
-    if (isNaN(age) || age < 13) {
-      showFormError('signup-age', 'You must be at least 13 years old');
-      valid = false;
-    }
-    if (age > 120) {
-      showFormError('signup-age', 'Please enter a valid age');
-      valid = false;
-    }
-    if (!agreeTerms) {
-      showToast('You must agree to the Terms of Service', 'warning');
-      valid = false;
-    }
-    if (!valid) return;
-    
-    setFormLoading('signup', true);
-    
-    /* Step 1: Check if email already exists in database */
-    var emailKey = email.replace(/\./g, '_');
-    
-    database.ref('users').orderByChild('email').equalTo(email).once('value')
-      .then(function(snapshot) {
-        if (snapshot.exists()) {
-          setFormLoading('signup', false);
-          showFormError('signup-email', 'An account with this email already exists');
-          return;
-        }
-        
-        /* Step 2: Save signup data to sessionStorage for verification page */
-        var signupData = {
-          name: name,
-          email: email,
-          password: password,
-          country: country,
-          age: age,
-          timestamp: Date.now()
-        };
-        
-        try {
-          sessionStorage.setItem('xstream_signup_data', JSON.stringify(signupData));
-        } catch (err) {
-          setFormLoading('signup', false);
-          showToast('Unable to save form data. Please enable cookies.', 'error');
-          return;
-        }
-        
-        /* Step 3: Redirect to verification page */
-        window.location.href = 'verification.html';
-        
-      })
-      .catch(function(err) {
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  clearFormErrors('signup');
+  
+  var name = document.getElementById('signup-name').value.trim();
+  var email = document.getElementById('signup-email').value.trim();
+  var phone = document.getElementById('signup-phone').value.trim();
+  var password = document.getElementById('signup-password').value;
+  var confirmPassword = document.getElementById('signup-confirm-password').value;
+  var country = document.getElementById('signup-country').value;
+  var age = parseInt(document.getElementById('signup-age').value);
+  var agreeTerms = document.getElementById('agree-terms').checked;
+  
+  /* Validation */
+  var valid = true;
+  if (!name || name.length < 2) {
+    showFormError('signup-name', 'Full name must be at least 2 characters');
+    valid = false;
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showFormError('signup-email', 'Please enter a valid email address');
+    valid = false;
+  }
+  if (!phone || !/^\+?[1-9]\d{6,14}$/.test(phone.replace(/[\s\-\(\)]/g, ''))) {
+    showFormError('signup-phone', 'Please enter a valid phone number (e.g., +1234567890)');
+    valid = false;
+  }
+  if (!password || password.length < 6) {
+    showFormError('signup-password', 'Password must be at least 6 characters');
+    valid = false;
+  }
+  if (password !== confirmPassword) {
+    showFormError('signup-confirm-password', 'Passwords do not match');
+    valid = false;
+  }
+  if (!country) {
+    showFormError('signup-country', 'Please select your country');
+    valid = false;
+  }
+  if (isNaN(age) || age < 13) {
+    showFormError('signup-age', 'You must be at least 13 years old');
+    valid = false;
+  }
+  if (age > 120) {
+    showFormError('signup-age', 'Please enter a valid age');
+    valid = false;
+  }
+  if (!agreeTerms) {
+    showToast('You must agree to the Terms of Service', 'warning');
+    valid = false;
+  }
+  if (!valid) return;
+  
+  setFormLoading('signup', true);
+  
+  /* Normalize phone number for Infobip (remove spaces, dashes, parentheses) */
+  var normalizedPhone = phone.replace(/[\s\-\(\)]/g, '');
+  if (!normalizedPhone.startsWith('+')) {
+    normalizedPhone = '+' + normalizedPhone;
+  }
+  
+  /* Step 1: Check if email already exists in database */
+  var emailKey = email.replace(/\./g, '_');
+  
+  database.ref('users').orderByChild('email').equalTo(email).once('value')
+    .then(function(snapshot) {
+      if (snapshot.exists()) {
         setFormLoading('signup', false);
-        console.error('Signup pre-check error:', err);
-        showToast('Something went wrong. Please try again.', 'error');
-      });
-  });
+        showFormError('signup-email', 'An account with this email already exists');
+        return;
+      }
+      
+      /* Step 2: Save signup data to sessionStorage for verification page */
+      var signupData = {
+        name: name,
+        email: email,
+        phone: normalizedPhone,
+        password: password,
+        country: country,
+        age: age,
+        timestamp: Date.now()
+      };
+      
+      try {
+        sessionStorage.setItem('xstream_signup_data', JSON.stringify(signupData));
+      } catch (err) {
+        setFormLoading('signup', false);
+        showToast('Unable to save form data. Please enable cookies.', 'error');
+        return;
+      }
+      
+      /* Step 3: Redirect to verification page */
+      window.location.href = 'verification.html';
+      
+    })
+    .catch(function(err) {
+      setFormLoading('signup', false);
+      console.error('Signup pre-check error:', err);
+      showToast('Something went wrong. Please try again.', 'error');
+    });
+});
 }
 
 
