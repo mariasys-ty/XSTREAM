@@ -1,6 +1,7 @@
 /**
  * xStream Email OTP Verification
  * Handles OTP generation, sending, and verification
+ * Supports Email + WhatsApp delivery
  */
 
 (function() {
@@ -15,8 +16,13 @@
         EMAILJS_SERVICE_ID: ENV_CONFIG.EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID: ENV_CONFIG.EMAILJS_TEMPLATE_ID,
         
+        // Infobip WhatsApp Settings (read from config.js)
+        INFOBIP_BASE_URL: ENV_CONFIG.INFOBIP_BASE_URL,
+        INFOBIP_API_KEY: ENV_CONFIG.INFOBIP_API_KEY,
+        INFOBIP_SENDER: ENV_CONFIG.INFOBIP_SENDER,
+        
         // OTP Settings
-        OTP_LENGTH: 4,
+        OTP_LENGTH: 6,
         OTP_EXPIRY_SECONDS: 300, // 5 minutes
         RESEND_COOLDOWN_SECONDS: 60, // 1 minute
         MAX_ATTEMPTS: 5,
@@ -107,85 +113,165 @@
     }
 
     // ============================================
-    // GENERATE 4-DIGIT OTP
+    // GENERATE 6-DIGIT OTP
     // ============================================
     function generateOTP() {
         // Using crypto API for better randomness
         const array = new Uint32Array(1);
         crypto.getRandomValues(array);
         
-        // Generate 4-digit number (1000-9999)
-        return (array[0] % 9000 + 1000).toString();
+        // Generate 6-digit number (100000-999999)
+        return (array[0] % 900000 + 100000).toString();
     }
+
+// ============================================
+// SEND SMS OTP VIA INFOBIP
+// ============================================
+function sendSmsOTP(phoneNumber, otp, name) {
+    return new Promise((resolve, reject) => {
+        // Clean base URL — remove trailing slash
+        let baseUrl = CONFIG.INFOBIP_BASE_URL.replace(/\/+$/, '');
+        
+        // Ensure protocol is present
+        if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+            baseUrl = 'https://' + baseUrl;
+        }
+        
+        // Remove duplicate sms path if accidentally included in config
+        baseUrl = baseUrl.replace(/\/sms.*$/, '');
+        
+        // Infobip SMS API endpoint
+        const url = baseUrl + '/sms/2/text/advanced';
+        
+        // Infobip SMS requires a "messages" array structure
+        const payload = {
+            messages: [
+                {
+                    from: CONFIG.INFOBIP_SENDER,
+                    destinations: [
+                        {
+                            to: phoneNumber
+                        }
+                    ],
+                    text: `Hi ${name}, your xStream verification code is: ${otp}. This code expires in ${Math.floor(CONFIG.OTP_EXPIRY_SECONDS / 60)} minutes. Do not share this code with anyone.`
+                }
+            ]
+        };
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': 'App ' + CONFIG.INFOBIP_API_KEY,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errData => {
+                    reject(new Error(errData.message || errData.description || 'SMS API error: ' + response.status));
+                }).catch(() => {
+                    reject(new Error('SMS API error: ' + response.status));
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ SMS OTP sent successfully:', data);
+            resolve(data);
+        })
+        .catch(error => {
+            console.error('❌ SMS send error:', error);
+            reject(error);
+        });
+    });
+}
 
     // ============================================
     // SEND OTP
     // ============================================
-   async function sendOTP() {
-    const otp = generateOTP();
-    console.log('Generated OTP:', otp); // Remove in production
-    
-    const emailKey = userEmail.replace(/\./g, '_');
-    const otpData = {
-        code: otp,
-        email: userEmail,
-        createdAt: firebase.database.ServerValue.TIMESTAMP,
-        expiresAt: Date.now() + (CONFIG.OTP_EXPIRY_SECONDS * 1000),
-        attempts: 0,
-        verified: false
-    };
-    
-    let emailSent = false;
-    
-    try {
-        // 1. SEND EMAIL FIRST (Priority!)
-        console.log('Sending email via EmailJS...');
-        await emailjs.send(
-            CONFIG.EMAILJS_SERVICE_ID,
-            CONFIG.EMAILJS_TEMPLATE_ID,
-            {
-                email: userEmail,
-                name: signupData.name,
-                otp: otp,
-                expiry_minutes: Math.floor(CONFIG.OTP_EXPIRY_SECONDS / 60)
-            }
-        );
-        emailSent = true;
-        console.log('✅ Email sent successfully!');
+    async function sendOTP() {
+        const otp = generateOTP();
+        console.log('Generated OTP:', otp); // Remove in production
         
-        // 2. SAVE TO FIREBASE SECOND
-        console.log('Saving OTP to Firebase...');
-        await firebase.database()
-            .ref(CONFIG.OTP_DB_PATH + '/' + emailKey)
-            .set(otpData);
-        console.log('✅ OTP saved to Firebase!');
+        const emailKey = userEmail.replace(/\./g, '_');
+        const otpData = {
+            code: otp,
+            email: userEmail,
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            expiresAt: Date.now() + (CONFIG.OTP_EXPIRY_SECONDS * 1000),
+            attempts: 0,
+            verified: false
+        };
         
-        // Reset state
-        attempts = 0;
-        clearOtpInputs();
-        hideMessage();
-        startTimer(CONFIG.RESEND_COOLDOWN_SECONDS);
+        let emailSent = false;
+        let whatsappSent = false;
         
-    } catch (error) {
-        console.error('❌ Error in sendOTP:', error);
-        
-        // If email sent but Firebase failed, still count as success
-        if (emailSent) {
-            console.warn('Email sent but Firebase failed. User can still verify.');
+        try {
+            // 1. SEND EMAIL FIRST (Priority!)
+            console.log('Sending email via EmailJS...');
+            await emailjs.send(
+                CONFIG.EMAILJS_SERVICE_ID,
+                CONFIG.EMAILJS_TEMPLATE_ID,
+                {
+                    email: userEmail,
+                    name: signupData.name,
+                    otp: otp,
+                    expiry_minutes: Math.floor(CONFIG.OTP_EXPIRY_SECONDS / 60)
+                }
+            );
+            emailSent = true;
+            console.log('✅ Email sent successfully!');
+            
+            // 2. SEND WHATSAPP OTP (Same OTP)
+           // NEW CODE (SMS instead of WhatsApp)
+          if (signupData.phone) {
+         console.log('Sending SMS OTP via Infobip...');
+         try {
+         await sendSmsOTP(signupData.phone, otp, signupData.name);
+         console.log('✅ SMS OTP sent successfully!');
+         } catch (smsError) {
+         console.warn('⚠️ SMS send failed:', smsError.message);
+        // Continue even if SMS fails - email is the primary channel
+    }
+} else {
+    console.warn('⚠️ No phone number provided, skipping SMS.');
+}
+            
+            // 3. SAVE TO FIREBASE
+            console.log('Saving OTP to Firebase...');
+            await firebase.database()
+                .ref(CONFIG.OTP_DB_PATH + '/' + emailKey)
+                .set(otpData);
+            console.log('✅ OTP saved to Firebase!');
+            
+            // Reset state
+            attempts = 0;
             clearOtpInputs();
             hideMessage();
             startTimer(CONFIG.RESEND_COOLDOWN_SECONDS);
-            return;
+            
+        } catch (error) {
+            console.error('❌ Error in sendOTP:', error);
+            
+            // If email sent but Firebase failed, still count as success
+            if (emailSent) {
+                console.warn('Email sent but Firebase failed. User can still verify.');
+                clearOtpInputs();
+                hideMessage();
+                startTimer(CONFIG.RESEND_COOLDOWN_SECONDS);
+                return;
+            }
+            
+            // Otherwise, show error
+            let errorMsg = 'Failed to send code. ';
+            if (error.status) errorMsg += `Error ${error.status}: `;
+            errorMsg += error.text || error.message || 'Please try again.';
+            
+            showMessage(errorMsg, 'error');
         }
-        
-        // Otherwise, show error
-        let errorMsg = 'Failed to send code. ';
-        if (error.status) errorMsg += `Error ${error.status}: `;
-        errorMsg += error.text || error.message || 'Please try again.';
-        
-        showMessage(errorMsg, 'error');
     }
-}
 
     // ============================================
     // VERIFY OTP
@@ -196,7 +282,7 @@
         const enteredOtp = getOtpValue();
         
         if (enteredOtp.length !== CONFIG.OTP_LENGTH) {
-            showMessage('Please enter the complete 4-digit code', 'error');
+            showMessage('Please enter the complete 6-digit code', 'error');
             shakeInputs();
             return;
         }
@@ -312,6 +398,7 @@
             const userData = {
                 name: signupData.name,
                 email: signupData.email,
+                phone: signupData.phone,
                 country: signupData.country,
                 age: parseInt(signupData.age),
                 emailVerified: true,
