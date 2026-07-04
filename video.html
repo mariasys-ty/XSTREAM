@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta name="description" content="Watch this Movie on Xstream.">
   <title>Watch movie — Xstream</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,979 +11,661 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/ad.css">
 
-  <!-- ═══════════════════════════════════════════════════════════
-       PREMIUM DESKTOP LAYOUT STYLES
-       Activates only at ≥1200px — does NOT affect mobile
-       ═══════════════════════════════════════════════════════════ -->
+  <!-- ========== DESKTOP PREMIUM WATCH PAGE — 1024px+ ONLY ========== -->
   <style>
-    /* ─── Design Tokens ─── */
-    :root {
-      --d-bg: #0a0a0a;
-      --d-bg-card: #141414;
-      --d-bg-card-hover: #1a1a1a;
-      --d-bg-elevated: #1c1c1c;
-      --d-bg-glass: rgba(20, 20, 20, 0.75);
-      --d-accent: #e50914;
-      --d-accent-hover: #ff1a25;
-      --d-accent-soft: rgba(229, 9, 20, 0.12);
-      --d-accent-glow: rgba(229, 9, 20, 0.25);
-      --d-text: #ffffff;
-      --d-text-sub: rgba(255, 255, 255, 0.7);
-      --d-text-tertiary: rgba(255, 255, 255, 0.45);
-      --d-text-muted: rgba(255, 255, 255, 0.25);
-      --d-border: rgba(255, 255, 255, 0.08);
-      --d-border-light: rgba(255, 255, 255, 0.14);
-      --d-border-accent: rgba(229, 9, 20, 0.3);
-      --d-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-      --d-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
-      --d-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
-      --d-shadow-xl: 0 16px 56px rgba(0, 0, 0, 0.6);
-      --d-shadow-glow: 0 0 40px rgba(229, 9, 20, 0.12);
-      --d-radius-xs: 4px;
-      --d-radius-sm: 6px;
-      --d-radius-md: 10px;
-      --d-radius-lg: 14px;
-      --d-radius-xl: 20px;
-      --d-radius-2xl: 24px;
-      --d-radius-full: 9999px;
-      --d-nav-h: 64px;
-      --d-ease: 280ms ease;
-      --d-ease-fast: 200ms ease;
-      --d-ease-slow: 350ms ease;
-      --d-max: 1480px;
-      --d-sidebar-w: 370px;
-      --d-font: 'Poppins', sans-serif;
-      --d-font-alt: 'Inter', sans-serif;
-    }
+    @media (min-width: 1024px) {
 
-    /* ─── Base Improvements (all screens) ─── */
-    html { scroll-behavior: smooth; }
+      /* ── Scrollbar ── */
+      ::selection { background: rgba(229,9,20,0.35); color: #fff; }
+      ::-webkit-scrollbar { width: 7px; }
+      ::-webkit-scrollbar-track { background: #050505; }
+      ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #444; }
 
-    .navbar {
-      backdrop-filter: blur(24px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-      background: rgba(10, 10, 10, 0.82) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-      transition: background var(--d-ease), box-shadow var(--d-ease) !important;
-    }
+      /* ── Body ── */
+      body[data-page="video"] {
+        background: #050505;
+        background-image: radial-gradient(ellipse at 25% 15%, rgba(229,9,20,0.025) 0%, transparent 55%);
+      }
 
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.12);
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
-
-    /* ─── Hide Desktop Elements by Default ─── */
-    .desktop-sidebar,
-    .desktop-player-meta,
-    .desktop-social-nav,
-    .desktop-related-section {
-      display: none;
-    }
-
-    /* ═══════════════════════════════════════════════════════════
-       DESKTOP LAYOUT — ≥1200px
-       ═══════════════════════════════════════════════════════════ */
-    @media (min-width: 1200px) {
-
-      /* ─── Main Grid ─── */
+      /* ── Main Container ── */
       .video-page-main {
-        display: grid;
-        grid-template-columns: 1fr var(--d-sidebar-w);
-        grid-template-rows: auto auto auto auto;
-        grid-template-areas:
-          "player  sidebar"
-          "meta    sidebar"
-          "social  sidebar"
-          "related related";
-        gap: 0 32px;
-        max-width: var(--d-max);
-        margin: 0 auto;
-        padding: 28px 48px 72px;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
       }
 
-      /* ─── Override existing mobile grid ─── */
-      .video-page-main > .video-page-grid {
-        grid-area: player;
-        display: block;
-        gap: 0;
-        padding: 0;
-        margin: 0;
-        max-width: 100%;
+      /* ══════════════════════════════════════════
+         PAGE GRID — 3 COLUMNS
+         ══════════════════════════════════════════ */
+      .video-page-grid {
+        display: grid !important;
+        grid-template-columns: 1.15fr 1fr 360px !important;
+        gap: 28px !important;
+        max-width: 1560px !important;
+        margin: 0 auto !important;
+        padding: 36px 48px 20px !important;
+        align-items: start !important;
       }
 
-      /* Hide mobile-specific elements */
-      .video-page-main > .video-page-grid .video-info,
-      .video-page-main > .video-page-grid .social-nav-buttons,
-      .video-page-main > .video-page-grid .related-sidebar {
-        display: none !important;
+      /* ══════════════════════════════════════════
+         VIDEO PLAYER COL — INTERNAL 2-COL SPLIT
+         ══════════════════════════════════════════ */
+      .video-player-col {
+        grid-column: 1 / 3 !important;
+        display: grid !important;
+        grid-template-columns: 1.1fr 1fr !important;
+        grid-template-rows: auto auto !important;
+        gap: 0 32px !important;
+        align-items: start !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+        width: 100% !important;
       }
 
-      /* ─── Player Styling ─── */
+      /* ── Grid Placements ── */
+      .video-info {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+      }
+      .social-nav-buttons {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+        margin-top: 24px !important;
+      }
+      #video-not-found {
+        grid-column: 1 / -1 !important;
+        grid-row: 1 !important;
+      }
+
+      /* ══════════════════════════════════════════
+         PLAYER / POSTER CONTAINER
+         ══════════════════════════════════════════ */
+      .player-poster-container {
+        grid-column: 2 !important;
+        grid-row: 1 / 3 !important;
+        position: relative !important;
+        border-radius: 18px !important;
+        overflow: hidden !important;
+        background: #0d0d0d !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
+        box-shadow:
+          0 24px 80px rgba(0,0,0,0.55),
+          0 0 0 1px rgba(255,255,255,0.03) inset !important;
+        align-self: start !important;
+      }
+
+      /* ── Player Wrapper ── */
       .video-player-wrapper {
-        border-radius: var(--d-radius-xl) !important;
-        overflow: hidden;
-        box-shadow: var(--d-shadow-lg);
-        border: 1px solid var(--d-border);
-        position: relative;
-        background: #000;
-        transition: box-shadow var(--d-ease), border-color var(--d-ease);
+        position: relative !important;
+        width: 100% !important;
+        background: #000 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
       }
-
-      .video-player-wrapper:hover {
-        box-shadow: var(--d-shadow-xl);
-        border-color: var(--d-border-light);
-      }
-
       .video-player-wrapper video {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        display: block;
-        border-radius: var(--d-radius-xl);
-      }
-
-      /* Subtle vignette on player */
-      .video-player-wrapper::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: var(--d-radius-xl);
-        box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3);
-        pointer-events: none;
-        z-index: 2;
-      }
-
-      /* ─── Player Meta (below player) ─── */
-      .desktop-player-meta {
-        grid-area: meta;
-        display: block;
-        padding: 24px 4px 0;
-        animation: fadeUp 0.4s ease both;
-      }
-
-      .dpm-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 14px;
-      }
-
-      .dpm-title {
-        font-family: var(--d-font);
-        font-size: clamp(1.5rem, 2.5vw, 2rem);
-        font-weight: 800;
-        color: var(--d-text);
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-        margin: 0;
-      }
-
-      .dpm-badges {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-shrink: 0;
-        padding-top: 4px;
-      }
-
-      .dpm-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        border-radius: var(--d-radius-sm);
-        font-family: var(--d-font-alt);
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-      }
-
-      .dpm-badge--quality {
-        background: var(--d-accent);
-        color: #fff;
-      }
-
-      .dpm-badge--lang {
-        background: rgba(255, 255, 255, 0.08);
-        color: var(--d-text-sub);
-        border: 1px solid var(--d-border);
-      }
-
-      .dpm-stats {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        flex-wrap: wrap;
-        margin-bottom: 18px;
-      }
-
-      .dpm-stat {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-family: var(--d-font-alt);
-        font-size: 0.85rem;
-        color: var(--d-text-tertiary);
-      }
-
-      .dpm-stat svg {
-        width: 15px;
-        height: 15px;
-        opacity: 0.6;
-      }
-
-      .dpm-stat-divider {
-        width: 3px;
-        height: 3px;
-        border-radius: 50%;
-        background: var(--d-text-muted);
-      }
-
-      .dpm-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .dpm-action-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 9px 18px;
-        border-radius: var(--d-radius-md);
-        font-family: var(--d-font-alt);
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: var(--d-text-sub);
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid var(--d-border);
-        cursor: pointer;
-        transition: all var(--d-ease);
-        white-space: nowrap;
-      }
-
-      .dpm-action-btn svg {
-        width: 17px;
-        height: 17px;
-        flex-shrink: 0;
-      }
-
-      .dpm-action-btn:hover {
-        color: var(--d-text);
-        background: rgba(255, 255, 255, 0.08);
-        border-color: var(--d-border-light);
-        transform: translateY(-1px);
-      }
-
-      .dpm-action-btn.liked {
-        color: var(--d-accent);
-        border-color: var(--d-border-accent);
-        background: var(--d-accent-soft);
-      }
-
-      .dpm-action-btn.disliked {
-        color: #f59e0b;
-        border-color: rgba(245, 158, 11, 0.3);
-        background: rgba(245, 158, 11, 0.08);
-      }
-
-      /* ─── Desktop Sidebar ─── */
-      .desktop-sidebar {
-        grid-area: sidebar;
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        position: sticky;
-        top: calc(var(--d-nav-h) + 28px);
-        align-self: start;
-        max-height: calc(100vh - var(--d-nav-h) - 56px);
-        overflow-y: auto;
-        overflow-x: hidden;
-        border-radius: var(--d-radius-2xl);
-        background: var(--d-bg-glass);
-        backdrop-filter: blur(20px) saturate(140%);
-        -webkit-backdrop-filter: blur(20px) saturate(140%);
-        border: 1px solid var(--d-border);
-        box-shadow: var(--d-shadow-md);
-        animation: fadeLeft 0.5s ease both;
-        scrollbar-width: thin;
-        scrollbar-color: rgba(255,255,255,0.1) transparent;
-      }
-
-      .desktop-sidebar::-webkit-scrollbar { width: 4px; }
-      .desktop-sidebar::-webkit-scrollbar-track { background: transparent; }
-      .desktop-sidebar::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 2px;
-      }
-
-      /* Poster */
-      .ds-poster-wrap {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 2 / 3;
-        overflow: hidden;
-        border-radius: var(--d-radius-2xl) var(--d-radius-2xl) 0 0;
-        background: var(--d-bg-card);
-      }
-
-      .ds-poster {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-      }
-
-      .ds-poster-wrap:hover .ds-poster {
-        transform: scale(1.05);
-      }
-
-      .ds-poster-overlay {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.35);
-        opacity: 0;
-        transition: opacity var(--d-ease);
-        cursor: pointer;
-      }
-
-      .ds-poster-wrap:hover .ds-poster-overlay {
-        opacity: 1;
-      }
-
-      .ds-poster-play {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        background: var(--d-accent);
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 0 30px rgba(229, 9, 20, 0.4);
-        transition: transform var(--d-ease), box-shadow var(--d-ease);
-      }
-
-      .ds-poster-play svg {
-        width: 24px;
-        height: 24px;
-        color: #fff;
-        margin-left: 3px;
-      }
-
-      .ds-poster-play:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 50px rgba(229, 9, 20, 0.5);
-      }
-
-      .ds-poster-quality {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        padding: 3px 9px;
-        border-radius: var(--d-radius-xs);
-        background: var(--d-accent);
-        color: #fff;
-        font-family: var(--d-font);
-        font-size: 0.68rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
-      }
-
-      /* Poster gradient fade into content */
-      .ds-poster-wrap::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100px;
-        background: linear-gradient(to top, var(--d-bg-card) 0%, transparent 100%);
-        pointer-events: none;
-      }
-
-      /* CTA Buttons */
-      .ds-cta {
-        display: flex;
-        gap: 10px;
-        padding: 18px 20px 0;
-      }
-
-      .ds-btn {
-        flex: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 12px 16px;
-        border-radius: var(--d-radius-md);
-        font-family: var(--d-font);
-        font-size: 0.85rem;
-        font-weight: 700;
-        border: none;
-        cursor: pointer;
-        transition: all var(--d-ease);
-        white-space: nowrap;
-      }
-
-      .ds-btn svg {
-        width: 18px;
-        height: 18px;
-        flex-shrink: 0;
-      }
-
-      .ds-btn--primary {
-        background: var(--d-accent);
-        color: #fff;
-        box-shadow: 0 4px 16px rgba(229, 9, 20, 0.3);
-      }
-
-      .ds-btn--primary:hover {
-        background: var(--d-accent-hover);
-        box-shadow: 0 6px 24px rgba(229, 9, 20, 0.4);
-        transform: translateY(-1px);
-      }
-
-      .ds-btn--secondary {
-        background: rgba(255, 255, 255, 0.06);
-        color: var(--d-text-sub);
-        border: 1px solid var(--d-border);
-      }
-
-      .ds-btn--secondary:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--d-text);
-        border-color: var(--d-border-light);
-        transform: translateY(-1px);
-      }
-
-      /* Sidebar Info */
-      .ds-info {
-        padding: 18px 20px 0;
-      }
-
-      .ds-title {
-        font-family: var(--d-font);
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: var(--d-text);
-        line-height: 1.3;
-        margin: 0 0 16px;
-        letter-spacing: -0.01em;
-      }
-
-      /* Metadata Grid */
-      .ds-meta-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px 16px;
-        margin-bottom: 18px;
-        padding: 14px 16px;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: var(--d-radius-md);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-      }
-
-      .ds-meta-item {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-      }
-
-      .ds-meta-label {
-        font-family: var(--d-font-alt);
-        font-size: 0.68rem;
-        font-weight: 500;
-        color: var(--d-text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-      }
-
-      .ds-meta-value {
-        font-family: var(--d-font-alt);
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: var(--d-text-sub);
-      }
-
-      .ds-meta-value--rating {
-        color: #facc15;
-        font-weight: 700;
-      }
-
-      /* Genres */
-      .ds-genres {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 16px;
-      }
-
-      .ds-genre-tag {
-        padding: 5px 12px;
-        border-radius: var(--d-radius-full);
-        font-family: var(--d-font-alt);
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: var(--d-text-tertiary);
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        transition: all var(--d-ease-fast);
-        cursor: default;
-      }
-
-      .ds-genre-tag:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--d-text-sub);
-        border-color: var(--d-border-light);
-      }
-
-      /* Description */
-      .ds-description {
-        font-family: var(--d-font-alt);
-        font-size: 0.84rem;
-        color: var(--d-text-tertiary);
-        line-height: 1.7;
-        margin: 0 0 4px;
-        display: -webkit-box;
-        -webkit-line-clamp: 5;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        white-space: pre-wrap;
-      }
-
-      /* Divider */
-      .ds-divider {
-        height: 1px;
-        margin: 16px 20px;
-        background: var(--d-border);
-      }
-
-      /* Sidebar Actions */
-      .ds-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        padding: 0 20px 20px;
-      }
-
-      .ds-action-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-        padding: 10px 12px;
-        border-radius: var(--d-radius-md);
-        font-family: var(--d-font-alt);
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: var(--d-text-tertiary);
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid var(--d-border);
-        cursor: pointer;
-        transition: all var(--d-ease);
-        white-space: nowrap;
-      }
-
-      .ds-action-btn svg {
-        width: 16px;
-        height: 16px;
-        flex-shrink: 0;
-      }
-
-      .ds-action-btn:hover {
-        color: var(--d-text);
-        background: rgba(255, 255, 255, 0.08);
-        border-color: var(--d-border-light);
-        transform: translateY(-1px);
-      }
-
-      .ds-action-btn.liked {
-        color: var(--d-accent);
-        border-color: var(--d-border-accent);
-        background: var(--d-accent-soft);
-      }
-
-      .ds-action-btn.favourited {
-        color: #ec4899;
-        border-color: rgba(236, 72, 153, 0.3);
-        background: rgba(236, 72, 153, 0.08);
-      }
-
-      /* ─── Desktop Social Nav ─── */
-      .desktop-social-nav {
-        grid-area: social;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 24px 4px 0;
-        animation: fadeUp 0.45s ease both;
-        animation-delay: 0.1s;
-      }
-
-      .ds-nav-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        border-radius: var(--d-radius-full);
-        font-family: var(--d-font-alt);
-        font-size: 0.82rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all var(--d-ease);
-        border: 1px solid var(--d-border);
-      }
-
-      .ds-nav-btn svg {
-        width: 18px;
-        height: 18px;
-        flex-shrink: 0;
-      }
-
-      .ds-nav-btn--telegram {
-        background: rgba(0, 136, 204, 0.1);
-        color: #38bdf8;
-        border-color: rgba(0, 136, 204, 0.2);
-      }
-
-      .ds-nav-btn--telegram:hover {
-        background: rgba(0, 136, 204, 0.18);
-        border-color: rgba(0, 136, 204, 0.35);
-        transform: translateY(-1px);
-      }
-
-      .ds-nav-btn--whatsapp {
-        background: rgba(37, 211, 102, 0.1);
-        color: #4ade80;
-        border-color: rgba(37, 211, 102, 0.2);
-      }
-
-      .ds-nav-btn--whatsapp:hover {
-        background: rgba(37, 211, 102, 0.18);
-        border-color: rgba(37, 211, 102, 0.35);
-        transform: translateY(-1px);
-      }
-
-      .ds-nav-btn--youtube {
-        background: rgba(229, 9, 20, 0.1);
-        color: #f87171;
-        border-color: rgba(229, 9, 20, 0.2);
-      }
-
-      .ds-nav-btn--youtube:hover {
-        background: rgba(229, 9, 20, 0.18);
-        border-color: rgba(229, 9, 20, 0.35);
-        transform: translateY(-1px);
-      }
-
-      /* ─── Desktop Related Section ─── */
-      .desktop-related-section {
-        grid-area: related;
-        display: block;
-        padding-top: 40px;
-        animation: fadeUp 0.5s ease both;
-        animation-delay: 0.15s;
-      }
-
-      .drs-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
-      }
-
-      .drs-title {
-        font-family: var(--d-font);
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: var(--d-text);
-        margin: 0;
-        letter-spacing: -0.01em;
-      }
-
-      .drs-see-all {
-        font-family: var(--d-font-alt);
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: var(--d-accent);
-        text-decoration: none;
-        transition: color var(--d-ease-fast);
-      }
-
-      .drs-see-all:hover {
-        color: var(--d-accent-hover);
-      }
-
-      /* Related Grid */
-      .drs-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 20px;
-      }
-
-      @media (min-width: 1200px) and (max-width: 1399px) {
-        .drs-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      @media (min-width: 1200px) and (max-width: 1280px) {
-        .drs-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .video-page-main {
-          gap: 0 24px;
-          padding: 24px 32px 60px;
-        }
-        .desktop-sidebar {
-          max-width: 320px;
-        }
-      }
-
-      /* Related Card */
-      .drs-card {
-        display: block;
-        text-decoration: none;
-        border-radius: var(--d-radius-lg);
-        overflow: hidden;
-        background: var(--d-bg-card);
-        border: 1px solid var(--d-border);
-        transition: all var(--d-ease);
-        cursor: pointer;
-      }
-
-      .drs-card:hover {
-        transform: translateY(-6px);
-        box-shadow: var(--d-shadow-lg), var(--d-shadow-glow);
-        border-color: var(--d-border-light);
-      }
-
-      .drs-card-poster {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 2 / 3;
-        overflow: hidden;
-        background: #111;
-      }
-
-      .drs-card-poster img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-      }
-
-      .drs-card:hover .drs-card-poster img {
-        transform: scale(1.08);
-      }
-
-      .drs-card-overlay {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.4);
-        opacity: 0;
-        transition: opacity var(--d-ease);
-      }
-
-      .drs-card:hover .drs-card-overlay {
-        opacity: 1;
-      }
-
-      .drs-card-play {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: var(--d-accent);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 24px rgba(229, 9, 20, 0.5);
-        transform: scale(0.8);
-        transition: transform var(--d-ease);
-      }
-
-      .drs-card:hover .drs-card-play {
-        transform: scale(1);
-      }
-
-      .drs-card-play svg {
-        width: 20px;
-        height: 20px;
-        color: #fff;
-        margin-left: 2px;
-      }
-
-      .drs-card-duration {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        padding: 2px 7px;
-        border-radius: var(--d-radius-xs);
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        font-family: var(--d-font-alt);
-        font-size: 0.68rem;
-        font-weight: 600;
-        letter-spacing: 0.03em;
-      }
-
-      .drs-card-quality {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        padding: 2px 7px;
-        border-radius: var(--d-radius-xs);
-        background: var(--d-accent);
-        color: #fff;
-        font-family: var(--d-font);
-        font-size: 0.62rem;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-      }
-
-      .drs-card-info {
-        padding: 12px 12px 14px;
-      }
-
-      .drs-card-title {
-        font-family: var(--d-font);
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: var(--d-text);
-        line-height: 1.35;
-        margin: 0 0 6px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        transition: color var(--d-ease-fast);
-      }
-
-      .drs-card:hover .drs-card-title {
-        color: #fff;
-      }
-
-      .drs-card-meta {
-        font-family: var(--d-font-alt);
-        font-size: 0.72rem;
-        color: var(--d-text-muted);
-      }
-
-      /* ─── Adverts Sidebar (desktop) ─── */
+        width: 100% !important;
+        display: block !important;
+        background: #000 !important;
+        border-radius: 0 !important;
+      }
+      .skeleton-player {
+        width: 100% !important;
+        aspect-ratio: 16/9 !important;
+        border-radius: 0 !important;
+      }
+
+      /* ══════════════════════════════════════════
+         POSTER PLAY OVERLAY
+         ══════════════════════════════════════════ */
+      .poster-play-overlay {
+        display: none;
+        position: absolute !important;
+        inset: 0 !important;
+        z-index: 10 !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out !important;
+        border-radius: 0 !important;
+      }
+      .poster-play-overlay.poster-fade-out {
+        opacity: 0 !important;
+        transform: scale(1.04) !important;
+        pointer-events: none !important;
+      }
+      .poster-play-bg {
+        position: absolute !important;
+        inset: 0 !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        transition: transform 0.4s ease !important;
+      }
+      .poster-play-overlay:hover .poster-play-bg {
+        transform: scale(1.03);
+      }
+      .poster-play-darken {
+        position: absolute !important;
+        inset: 0 !important;
+        background: linear-gradient(
+          to top,
+          rgba(0,0,0,0.65) 0%,
+          rgba(0,0,0,0.3) 40%,
+          rgba(0,0,0,0.2) 100%
+        ) !important;
+        z-index: 1 !important;
+      }
+
+      /* ── Play Button ── */
+      .poster-play-btn {
+        position: relative !important;
+        z-index: 2 !important;
+        width: 84px !important;
+        height: 84px !important;
+        border-radius: 50% !important;
+        background: rgba(229,9,20,0.2) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        border: 2px solid rgba(229,9,20,0.45) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow:
+          0 0 40px rgba(229,9,20,0.3),
+          0 0 90px rgba(229,9,20,0.12) !important;
+        animation: playPulse 2.8s ease-in-out infinite !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease !important;
+        outline: none !important;
+        color: transparent !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+      }
+      .poster-play-btn:hover {
+        transform: scale(1.15) !important;
+        background: rgba(229,9,20,0.35) !important;
+        box-shadow:
+          0 0 60px rgba(229,9,20,0.5),
+          0 0 130px rgba(229,9,20,0.18) !important;
+        animation: none !important;
+      }
+      .poster-play-btn svg {
+        width: 34px !important;
+        height: 34px !important;
+        margin-left: 4px !important;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+      }
+      @keyframes playPulse {
+        0%, 100% { box-shadow: 0 0 40px rgba(229,9,20,0.3), 0 0 90px rgba(229,9,20,0.12); }
+        50% { box-shadow: 0 0 55px rgba(229,9,20,0.45), 0 0 110px rgba(229,9,20,0.18); }
+      }
+
+      /* ══════════════════════════════════════════
+         VIDEO INFO — LEFT COLUMN
+         ══════════════════════════════════════════ */
+      .video-info {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+
+      /* ── Title ── */
+      .video-title {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 38px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
+        line-height: 1.12 !important;
+        letter-spacing: -0.5px !important;
+        margin: 0 0 16px 0 !important;
+        padding: 0 !important;
+      }
+
+      /* ── Meta Container ── */
+      .video-meta {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+      }
+
+      /* ── Stat Badges ── */
+      .video-stats {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .stat-item {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 5px 12px !important;
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
+        border-radius: 8px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 12.5px !important;
+        font-weight: 500 !important;
+        color: #aaa !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+        transition: background 0.2s, color 0.2s !important;
+        cursor: default !important;
+      }
+      .stat-item:hover {
+        background: rgba(255,255,255,0.1) !important;
+        color: #ddd !important;
+      }
+      .stat-item svg {
+        width: 14px !important;
+        height: 14px !important;
+        opacity: 0.6 !important;
+        flex-shrink: 0 !important;
+      }
+      .stat-item span {
+        font-size: 12.5px !important;
+      }
+
+      /* ── Action Buttons ── */
+      .video-actions {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .action-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 7px !important;
+        padding: 9px 18px !important;
+        background: rgba(255,255,255,0.05) !important;
+        border: 1px solid rgba(255,255,255,0.07) !important;
+        border-radius: 10px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #bbb !important;
+        cursor: pointer !important;
+        transition: all 0.25s ease !important;
+        outline: none !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+      }
+      .action-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+        flex-shrink: 0 !important;
+        transition: color 0.25s !important;
+      }
+      .action-btn:hover {
+        background: rgba(255,255,255,0.1) !important;
+        border-color: rgba(255,255,255,0.12) !important;
+        color: #fff !important;
+        transform: translateY(-1px) !important;
+      }
+      .action-btn:active {
+        transform: translateY(0) !important;
+      }
+      .action-btn.active,
+      .action-btn.liked {
+        background: rgba(229,9,20,0.15) !important;
+        border-color: rgba(229,9,20,0.3) !important;
+        color: #E50914 !important;
+      }
+      .action-btn.active svg,
+      .action-btn.liked svg {
+        color: #E50914 !important;
+      }
+
+      /* ── Description ── */
+      .video-description-box {
+        margin-top: 20px !important;
+        padding: 18px 20px !important;
+        background: rgba(255,255,255,0.03) !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+        border-radius: 12px !important;
+      }
+      .video-description-box p {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        color: #888 !important;
+        line-height: 1.7 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      /* ══════════════════════════════════════════
+         SOCIAL NAV BUTTONS
+         ══════════════════════════════════════════ */
+      .social-nav-buttons {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+      }
+      .social-nav-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 10px 20px !important;
+        border-radius: 10px !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #fff !important;
+        text-decoration: none !important;
+        transition: all 0.25s ease !important;
+        border: none !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+      }
+      .social-nav-btn svg {
+        width: 18px !important;
+        height: 18px !important;
+        flex-shrink: 0 !important;
+      }
+      .social-nav-btn--telegram {
+        background: rgba(0,136,204,0.15) !important;
+        border: 1px solid rgba(0,136,204,0.25) !important;
+      }
+      .social-nav-btn--telegram:hover {
+        background: rgba(0,136,204,0.3) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 24px rgba(0,136,204,0.2) !important;
+      }
+      .social-nav-btn--whatsapp {
+        background: rgba(37,211,102,0.12) !important;
+        border: 1px solid rgba(37,211,102,0.2) !important;
+      }
+      .social-nav-btn--whatsapp:hover {
+        background: rgba(37,211,102,0.25) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 24px rgba(37,211,102,0.15) !important;
+      }
+      .social-nav-btn--youtube {
+        background: rgba(255,0,0,0.12) !important;
+        border: 1px solid rgba(255,0,0,0.2) !important;
+      }
+      .social-nav-btn--youtube:hover {
+        background: rgba(255,0,0,0.25) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 24px rgba(255,0,0,0.15) !important;
+      }
+
+      /* ══════════════════════════════════════════
+         RELATED SIDEBAR
+         ══════════════════════════════════════════ */
+      .related-sidebar {
+        grid-column: 3 !important;
+        grid-row: 1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #111 !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3) !important;
+        overflow: hidden !important;
+        max-height: calc(100vh - 140px) !important;
+        overflow-y: auto !important;
+      }
+      .related-sidebar::-webkit-scrollbar { width: 4px; }
+      .related-sidebar::-webkit-scrollbar-track { background: transparent; }
+      .related-sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+      .related-title {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        padding: 20px 20px 14px !important;
+        margin: 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        letter-spacing: -0.2px !important;
+      }
+
+      /* ── Related Video Items ── */
+      .related-list,
+      .widget-video-list {
+        padding: 8px 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .widget-video-item,
+      .related-list a,
+      .related-list > div,
+      .widget-video-list > a,
+      .widget-video-list > div {
+        display: flex !important;
+        gap: 12px !important;
+        padding: 10px 16px !important;
+        margin: 0 !important;
+        text-decoration: none !important;
+        color: inherit !important;
+        transition: background 0.2s ease !important;
+        cursor: pointer !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .widget-video-item:hover,
+      .related-list a:hover,
+      .related-list > div:hover,
+      .widget-video-list > a:hover,
+      .widget-video-list > div:hover {
+        background: rgba(255,255,255,0.04) !important;
+      }
+      .widget-video-item img,
+      .related-list img,
+      .widget-video-list img {
+        width: 110px !important;
+        min-width: 110px !important;
+        height: 66px !important;
+        object-fit: cover !important;
+        border-radius: 8px !important;
+        background: #1a1a1a !important;
+        flex-shrink: 0 !important;
+      }
+      .widget-video-item .widget-info,
+      .related-list .widget-info,
+      .widget-video-list .widget-info {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        min-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .widget-video-item .widget-title,
+      .related-list .widget-title,
+      .widget-video-list .widget-title,
+      .widget-video-item .title,
+      .related-list .title,
+      .widget-video-list .title {
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        color: #ddd !important;
+        line-height: 1.35 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-decoration: none !important;
+      }
+      .widget-video-item .widget-meta,
+      .related-list .widget-meta,
+      .widget-video-list .widget-meta,
+      .widget-video-item .meta,
+      .related-list .meta,
+      .widget-video-list .meta {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 11px !important;
+        font-weight: 400 !important;
+        color: #666 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      /* ── Skeleton Widget Items ── */
+      .skeleton-widget-item {
+        display: flex !important;
+        gap: 12px !important;
+        padding: 10px 16px !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .skeleton-widget-thumb {
+        width: 110px !important;
+        min-width: 110px !important;
+        height: 66px !important;
+        border-radius: 8px !important;
+      }
+      .skeleton-widget-item .skeleton-text {
+        border-radius: 5px !important;
+        margin: 6px 0 !important;
+      }
+      .skeleton-widget-item .skeleton-text.short {
+        width: 60% !important;
+      }
+
+      /* ══════════════════════════════════════════
+         ADVERTS SIDEBAR
+         ══════════════════════════════════════════ */
       .Adverts-sidebar {
-        max-width: var(--d-max);
-        margin: 0 auto;
-        padding: 0 48px 40px;
+        max-width: 1560px !important;
+        margin: 0 auto !important;
+        padding: 0 48px 48px !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
       }
-
       .Adverts-title {
-        font-family: var(--d-font);
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--d-text-tertiary);
-        margin-bottom: 16px;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: #ffffff !important;
+        margin: 0 0 16px 0 !important;
+        padding: 0 !important;
+        letter-spacing: -0.2px !important;
+      }
+      .ad-banner-wrapper {
+        background: #141414 !important;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+        border-radius: 14px !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        margin: 0 0 16px 0 !important;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.25) !important;
+        min-height: 90px !important;
+      }
+      .ad-banner-wrapper:last-child {
+        margin-bottom: 0 !important;
       }
 
-      /* ─── Empty State (desktop) ─── */
+      /* ══════════════════════════════════════════
+         EMPTY STATE (VIDEO NOT FOUND)
+         ══════════════════════════════════════════ */
       .empty-state {
-        text-align: center;
-        padding: 80px 24px;
+        text-align: center !important;
+        padding: 80px 40px !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
       }
-
       .empty-state svg {
-        width: 56px;
-        height: 56px;
-        color: var(--d-text-muted);
-        margin-bottom: 20px;
+        color: #2a2a2a !important;
       }
-
       .empty-state h3 {
-        font-family: var(--d-font);
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: var(--d-text);
-        margin: 0 0 8px;
+        font-family: 'Poppins', sans-serif !important;
+        font-size: 24px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-top: 20px !important;
       }
-
       .empty-state p {
-        font-family: var(--d-font-alt);
-        font-size: 0.9rem;
-        color: var(--d-text-tertiary);
-        margin: 0 0 24px;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 15px !important;
+        color: #777 !important;
+        margin-top: 8px !important;
+      }
+      .btn-accent {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 13px 30px !important;
+        background: #E50914 !important;
+        color: #fff !important;
+        border-radius: 12px !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        text-decoration: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        transition: all 0.25s ease !important;
+        margin-top: 20px !important;
+      }
+      .btn-accent:hover {
+        background: #ff1a25 !important;
+        box-shadow: 0 0 36px rgba(229,9,20,0.3) !important;
+        transform: translateY(-2px) !important;
+        color: #fff !important;
       }
 
-      .empty-state .btn-accent {
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 24px;
-        border-radius: var(--d-radius-md);
-        background: var(--d-accent);
-        color: #fff;
-        font-family: var(--d-font);
-        font-size: 0.85rem;
-        font-weight: 700;
-        text-decoration: none;
-        transition: all var(--d-ease);
+      /* ══════════════════════════════════════════
+         FOOTER
+         ══════════════════════════════════════════ */
+      .footer {
+        background: #0a0a0a !important;
+        border-top: 1px solid rgba(255,255,255,0.05) !important;
+        margin-top: 20px !important;
       }
 
-      .empty-state .btn-accent:hover {
-        background: var(--d-accent-hover);
-        transform: translateY(-1px);
-      }
     }
-
-    /* ═══════════════════════════════════════════════════════════
-       ANIMATIONS
-       ═══════════════════════════════════════════════════════════ */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeLeft {
-      from {
-        opacity: 0;
-        transform: translateX(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
+    /* ── END DESKTOP 1024px+ ── */
   </style>
 </head>
 <body data-page="video">
@@ -991,106 +674,27 @@
   <nav id="main-nav" class="navbar"></nav>
 
   <main class="video-page-main">
-
-    <!-- ═══════════════════════════════════════════════════════════
-         DESKTOP SIDEBAR — Hidden below 1200px
-         ═══════════════════════════════════════════════════════════ -->
-    <aside class="desktop-sidebar" id="desktop-sidebar">
-
-      <!-- Poster -->
-      <div class="ds-poster-wrap" id="ds-poster-wrap">
-        <img class="ds-poster" id="ds-poster" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='600' fill='%231a1a1a'%3E%3Crect width='400' height='600'/%3E%3C/svg%3E" alt="Movie Poster">
-        <div class="ds-poster-overlay">
-          <button class="ds-poster-play" id="ds-poster-play" title="Play Movie">
-            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          </button>
-        </div>
-        <span class="ds-poster-quality" id="ds-poster-quality">HD</span>
-      </div>
-
-      <!-- CTA Buttons -->
-      <div class="ds-cta">
-        <button class="ds-btn ds-btn--primary" id="ds-watch-btn">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Watch Now
-        </button>
-        <button class="ds-btn ds-btn--secondary" id="ds-list-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          My List
-        </button>
-      </div>
-
-      <!-- Info -->
-      <div class="ds-info" id="ds-info">
-        <h2 class="ds-title" id="ds-title">Loading...</h2>
-
-        <div class="ds-meta-grid">
-          <div class="ds-meta-item">
-            <span class="ds-meta-label">Rating</span>
-            <span class="ds-meta-value ds-meta-value--rating" id="ds-rating">—</span>
-          </div>
-          <div class="ds-meta-item">
-            <span class="ds-meta-label">Runtime</span>
-            <span class="ds-meta-value" id="ds-runtime">—</span>
-          </div>
-          <div class="ds-meta-item">
-            <span class="ds-meta-label">Year</span>
-            <span class="ds-meta-value" id="ds-year">—</span>
-          </div>
-          <div class="ds-meta-item">
-            <span class="ds-meta-label">Language</span>
-            <span class="ds-meta-value" id="ds-language">—</span>
-          </div>
-          <div class="ds-meta-item">
-            <span class="ds-meta-label">Country</span>
-            <span class="ds-meta-value" id="ds-country">—</span>
-          </div>
-          <div class="ds-meta-item">
-            <span class="ds-meta-label">Quality</span>
-            <span class="ds-meta-value" id="ds-quality">—</span>
-          </div>
-        </div>
-
-        <div class="ds-genres" id="ds-genres"></div>
-        <p class="ds-description" id="ds-description"></p>
-      </div>
-
-      <div class="ds-divider"></div>
-
-      <!-- Sidebar Actions -->
-      <div class="ds-actions">
-        <button class="ds-action-btn" id="ds-like-btn" title="Like">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-          Like
-        </button>
-        <button class="ds-action-btn" id="ds-fav-btn" title="Favourite">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Favourite
-        </button>
-        <button class="ds-action-btn" id="ds-share-btn" title="Share">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          Share
-        </button>
-        <button class="ds-action-btn" id="ds-download-btn" title="Download">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 8 12 3 17 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Download
-        </button>
-      </div>
-    </aside>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         EXISTING MOBILE LAYOUT — Unchanged
-         ═══════════════════════════════════════════════════════════ -->
     <div class="video-page-grid">
 
       <!-- Video Player Column -->
       <div class="video-player-col">
-        <!-- Player -->
-        <div class="video-player-wrapper" id="video-player-wrapper">
-          <div class="skeleton skeleton-player"></div>
+
+        <!-- Player — wrapped in poster-play container -->
+        <div class="player-poster-container" id="player-poster-container">
+          <div class="video-player-wrapper" id="video-player-wrapper">
+            <div class="skeleton skeleton-player"></div>
+          </div>
+          <!-- Poster + Play Button Overlay -->
+          <div class="poster-play-overlay" id="poster-play-overlay">
+            <div class="poster-play-bg" id="poster-play-bg"></div>
+            <div class="poster-play-darken"></div>
+            <button class="poster-play-btn" id="poster-play-btn" aria-label="Play movie">
+              <svg viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Video Info (hidden on desktop via CSS) -->
+        <!-- Video Info -->
         <div class="video-info" id="video-info" style="display:none;">
           <h1 class="video-title" id="video-title"></h1>
           <div class="video-meta">
@@ -1107,51 +711,51 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <span></span>
               </span>
+                <!-- Social Navigation Buttons -->
+   
             </div>
             <div class="video-actions">
-              <button class="action-btn" id="like-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                <span id="like-count">0</span>
-              </button>
-              <button class="action-btn" id="dislike-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                <span id="dislike-count">0</span>
-              </button>
-              <button class="action-btn" id="share-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                Share
-              </button>
-              <button class="action-btn" id="favourite-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                <span id="favourite-label">Favourite</span>
-              </button>
-              <button class="action-btn" id="download-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 8 12 3 17 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                Download
-              </button>
-            </div>
-          </div>
+          <button class="action-btn" id="like-btn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+  <span id="like-count">0</span>
+</button>
+<button class="action-btn" id="dislike-btn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+  <span id="dislike-count">0</span>
+</button>
+<button class="action-btn" id="share-btn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  Share
+</button>
+<button class="action-btn" id="favourite-btn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  <span id="favourite-label">Favourite</span>
+</button>
+<button class="action-btn" id="download-btn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 8 12 3 17 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+  Download
+</button>
+</div>
+</div>
           <div class="video-description-box">
             <p id="video-description"></p>
           </div>
         </div>
-
-        <!-- Social Navigation Buttons (hidden on desktop via CSS) -->
-        <div class="social-nav-buttons">
-          <a href="https://t.me/xstreamfilms" target="_blank" rel="noopener noreferrer" class="social-nav-btn social-nav-btn--telegram">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-            Join Channal
-          </a>
-          <a href="https://whatsapp.com/channel/0029Vb7mjGr2v1Ijuvz2CL1n" target="_blank" rel="noopener noreferrer" class="social-nav-btn social-nav-btn--whatsapp">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            WhatsApp channal
-          </a>
-          <a href="https://youtube.com/@xstreamflims?si=yvK4AwmC3VcMJSzz" target="_blank" rel="noopener noreferrer" class="social-nav-btn social-nav-btn--youtube">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-            Subscribe
-          </a>
-        </div>
-
+        
+         <div class="social-nav-buttons">
+      <a href="https://t.me/xstreamfilms" target="_blank" rel="noopener noreferrer" class="social-nav-btn social-nav-btn--telegram">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Join Channal
+      </a>
+      <a href="https://whatsapp.com/channel/0029Vb7mjGr2v1Ijuvz2CL1n" target="_blank" rel="noopener noreferrer" class="social-nav-btn social-nav-btn--whatsapp">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp channal
+      </a>
+      <a href="https://youtube.com/@xstreamflims?si=yvK4AwmC3VcMJSzz" target="_blank" rel="noopener noreferrer" class="social-nav-btn social-nav-btn--youtube">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+  Subscribe
+</a>
+    </div>
         <!-- Video Not Found -->
         <div id="video-not-found" class="empty-state" style="display:none;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
@@ -1161,734 +765,484 @@
         </div>
       </div>
 
-      <!-- Related Videos Sidebar (hidden on desktop via CSS) -->
-      <aside class="related-sidebar">
-        <h3 class="related-title">Related Videos</h3>
-        <div id="related-videos" class="related-list widget-video-list">
-          <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
-          <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
-          <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
-          <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
-          <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
-        </div>
-      </aside>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         DESKTOP PLAYER META — Hidden below 1200px
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="desktop-player-meta" id="desktop-player-meta">
-      <div class="dpm-top">
-        <h1 class="dpm-title" id="dpm-title"></h1>
-        <div class="dpm-badges" id="dpm-badges">
-          <span class="dpm-badge dpm-badge--quality" id="dpm-quality-badge">HD</span>
-        </div>
-      </div>
-      <div class="dpm-stats" id="dpm-stats">
-        <span class="dpm-stat" id="dpm-views">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span></span>
-        </span>
-        <span class="dpm-stat-divider"></span>
-        <span class="dpm-stat" id="dpm-date">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-          <span></span>
-        </span>
-        <span class="dpm-stat-divider"></span>
-        <span class="dpm-stat" id="dpm-country">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <span></span>
-        </span>
-      </div>
-      <div class="dpm-actions">
-        <button class="dpm-action-btn" id="dpm-like" title="Like">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-          <span id="dpm-like-count">0</span>
-        </button>
-        <button class="dpm-action-btn" id="dpm-dislike" title="Dislike">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-          <span id="dpm-dislike-count">0</span>
-        </button>
-        <button class="dpm-action-btn" id="dpm-share" title="Share">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          Share
-        </button>
-        <button class="dpm-action-btn" id="dpm-favourite" title="Favourite">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          Favourite
-        </button>
-        <button class="dpm-action-btn" id="dpm-download" title="Download">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 8 12 3 17 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Download
-        </button>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         DESKTOP SOCIAL NAV — Hidden below 1200px
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="desktop-social-nav">
-      <a href="https://t.me/xstreamfilms" target="_blank" rel="noopener noreferrer" class="ds-nav-btn ds-nav-btn--telegram">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-        Join Channel
-      </a>
-      <a href="https://whatsapp.com/channel/0029Vb7mjGr2v1Ijuvz2CL1n" target="_blank" rel="noopener noreferrer" class="ds-nav-btn ds-nav-btn--whatsapp">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        WhatsApp Channel
-      </a>
-      <a href="https://youtube.com/@xstreamflims?si=yvK4AwmC3VcMJSzz" target="_blank" rel="noopener noreferrer" class="ds-nav-btn ds-nav-btn--youtube">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        Subscribe
-      </a>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         DESKTOP RELATED MOVIES GRID — Hidden below 1200px
-         ═══════════════════════════════════════════════════════════ -->
-    <section class="desktop-related-section" id="desktop-related-section">
-      <div class="drs-header">
-        <h2 class="drs-title">Related Movies</h2>
-      </div>
-      <div class="drs-grid" id="drs-grid"></div>
-    </section>
-
-  </main>
-
-  <!-- Adverts -->
-  <aside class="Adverts-sidebar">
-    <h3 class="Adverts-title">Adverts</h3>
+      <!-- Related Videos Sidebar -->
+<aside class="related-sidebar">
+  <h3 class="related-title">Related Videos</h3>
+  <div id="related-videos" class="related-list widget-video-list">
+    <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
+    <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
+    <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
+    <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
+    <div class="skeleton-widget-item"><div class="skeleton skeleton-widget-thumb"></div><div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div></div>
+  </div>
+</aside>
+    </div> <!-- end .video-page-grid -->
+    </main> <!-- end .video-page-main -->
+   <aside class="Adverts-sidebar">
+  <h3 class="Adverts-title">  Adverts</h3>
+    <!-- ✅ Ad banners OUTSIDE the grid, AFTER main -->
     <div class="ad-banner-wrapper" id="ad-banner-top"></div>
-    <div class="ad-banner-wrapper" id="ad-banner-bottom"></div>
-  </aside>
-
-  <footer id="main-footer" class="footer"></footer>
-
-  <!-- Offline Manager -->
-  <script src="js/offline-manager.js"></script>
-
-  <!-- Register Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').catch(function(err) {
-          console.warn('SW registration failed:', err);
+    <div class="ad-banner-wrapper" id="ad-banner-bottom">
+      
+    </div>
+   </aside>
+    
+    <footer id="main-footer" class="footer"></footer>
+    
+    <!-- Offline Manager -->
+    <script src="js/offline-manager.js"></script>
+    
+    <!-- Register Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').catch(function(err) {
+            console.warn('SW registration failed:', err);
+          });
         });
+      }
+    </script>
+    
+    <script src="js/optimizer.js"></script>
+    <script src="js/threat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+   <script src="js/app.js"></script>
+<script src="js/WT.js"></script>
+
+<script>
+  /* =============================================
+   VIDEO PLAYER TRACKING INITIALIZATION
+   Safe initialization that handles null references
+   ============================================= */
+  
+  (function() {
+    'use strict';
+    
+    /* ─── Configuration ─── */
+    // CHANGE THIS to match your actual video element ID!
+    var VIDEO_ELEMENT_ID = 'videoPlayer';
+    // If your video has a different ID, change it here:
+    // Common IDs: 'videoPlayer', 'player', 'video', 'episode-video', 'main-video'
+    
+    /* ─── State ─── */
+    var isTracking = false;
+    var isPaused = false;
+    var currentMovieId = null;
+    var currentUserId = null;
+    var currentTitle = '';
+    var positionInterval = null;
+    
+    /* ─── Safely get video element with retries ─── */
+    function getVideoPlayer(callback, retries) {
+      retries = retries || 0;
+      var maxRetries = 20; // 20 * 250ms = 5 seconds max wait
+      
+      // Try to find by ID
+      var player = document.getElementById(VIDEO_ELEMENT_ID);
+      
+      // If not found by ID, try common selectors as fallback
+      if (!player) {
+        var fallbacks = ['video', '#player', '.video-player', 'video[controls]'];
+        for (var i = 0; i < fallbacks.length; i++) {
+          player = document.querySelector(fallbacks[i]);
+          if (player) {
+            console.log('[Tracker] Found video with fallback selector:', fallbacks[i]);
+            break;
+          }
+        }
+      }
+      
+      if (player) {
+        console.log('[Tracker] Video player found:', player.id || player.tagName);
+        callback(player);
+        return;
+      }
+      
+      if (retries < maxRetries) {
+        setTimeout(function() {
+          getVideoPlayer(callback, retries + 1);
+        }, 250);
+      } else {
+        console.error('[Tracker] Video player NOT found after', maxRetries, 'retries. Check your VIDEO_ELEMENT_ID setting.');
+      }
+    }
+    
+    /* ─── Extract movie/episode info from URL ─── */
+    function getMovieInfo() {
+      var params = new URLSearchParams(window.location.search);
+      return {
+        id: params.get('id') || params.get('movie') || params.get('episode') || 'unknown',
+        title: document.title || 'Unknown Title'
+      };
+    }
+    
+    /* ─── Get user ID ─── */
+    function getUserId() {
+      try {
+        if (typeof auth !== 'undefined' && auth && auth.currentUser) {
+          return auth.currentUser.uid;
+        }
+        if (typeof AppState !== 'undefined' && AppState && AppState.currentUser) {
+          return AppState.currentUser.uid;
+        }
+      } catch (e) {}
+      return null; // WT.js will use guest ID
+    }
+    
+    /* ─── Start tracking ─── */
+    function startTracking(player) {
+      if (!player || isTracking) return;
+      
+      currentMovieId = getMovieInfo().id;
+      currentUserId = getUserId();
+      currentTitle = getMovieInfo().title;
+      
+      console.log('[Tracker] Setting up tracking for:', currentMovieId);
+      
+      /* ─── loadedmetadata: Start watch session when duration is known ─── */
+      player.addEventListener('loadedmetadata', function onMetaLoaded() {
+        console.log('[Tracker] Metadata loaded, duration:', player.duration);
+        
+        if (typeof WatchTime !== 'undefined') {
+          WatchTime.startWatching(
+            currentMovieId,
+            currentUserId,
+            currentTitle,
+            player.duration
+          );
+          isTracking = true;
+          isPaused = false;
+          console.log('[Tracker] WatchTime session started');
+        } else {
+          console.error('[Tracker] WatchTime module not loaded!');
+        }
+      });
+      
+      // If metadata already loaded (cached video), start immediately
+      if (player.readyState >= 1 && player.duration > 0) {
+        if (typeof WatchTime !== 'undefined' && !isTracking) {
+          WatchTime.startWatching(
+            currentMovieId,
+            currentUserId,
+            currentTitle,
+            player.duration
+          );
+          isTracking = true;
+          console.log('[Tracker] WatchTime session started (cached metadata)');
+        }
+      }
+      
+      /* ─── Play event ─── */
+      player.addEventListener('play', function() {
+        console.log('[Tracker] Play event fired');
+        
+        if (!isTracking) {
+          // First play - start tracking
+          if (typeof WatchTime !== 'undefined') {
+            WatchTime.startWatching(
+              currentMovieId,
+              currentUserId,
+              currentTitle,
+              player.duration || 0
+            );
+            isTracking = true;
+            isPaused = false;
+          }
+        } else if (isPaused) {
+          // Resume from pause
+          if (typeof WatchTime !== 'undefined') {
+            WatchTime.resumeWatching();
+            isPaused = false;
+            console.log('[Tracker] Resumed');
+          }
+        }
+      });
+      
+      /* ─── Pause event ─── */
+      player.addEventListener('pause', function() {
+        if (!isTracking) return;
+        
+        // Don't pause if video ended (ended fires after pause)
+        if (player.ended) return;
+        
+        if (typeof WatchTime !== 'undefined') {
+          WatchTime.pauseWatching();
+          isPaused = true;
+          console.log('[Tracker] Paused');
+        }
+      });
+      
+      /* ─── Ended event ─── */
+      player.addEventListener('ended', function() {
+        console.log('[Tracker] Video ended');
+        
+        if (isTracking && typeof WatchTime !== 'undefined') {
+          WatchTime.completeMovie(currentMovieId, currentUserId);
+          isTracking = false;
+          isPaused = false;
+          stopPositionUpdates();
+          console.log('[Tracker] Marked as completed');
+        }
+      });
+      
+      /* ─── Error event ─── */
+      player.addEventListener('error', function(e) {
+        var error = player.error;
+        console.error('[Tracker] Player error:', error ? error.message : 'Unknown error');
+      });
+      
+      /* ─── Position tracking interval ─── */
+      startPositionUpdates(player);
+      
+      console.log('[Tracker] All event listeners attached');
+    }
+    
+    /* ─── Position update interval ─── */
+    function startPositionUpdates(player) {
+      stopPositionUpdates(); // Clear any existing interval
+      
+      positionInterval = setInterval(function() {
+        if (!player || !isTracking || isPaused) return;
+        if (player.paused || player.ended) return;
+        
+        if (typeof WatchTime !== 'undefined') {
+          WatchTime.updateWatchTime(
+            currentMovieId,
+            currentUserId,
+            player.currentTime
+          );
+        }
+      }, 3000); // Update every 3 seconds
+    }
+    
+    function stopPositionUpdates() {
+      if (positionInterval) {
+        clearInterval(positionInterval);
+        positionInterval = null;
+      }
+    }
+    
+    /* ─── Cleanup on page unload (WT.js handles this, but as safety net) ─── */
+    window.addEventListener('beforeunload', function() {
+      stopPositionUpdates();
+      
+      if (isTracking && typeof WatchTime !== 'undefined') {
+        var player = document.getElementById(VIDEO_ELEMENT_ID);
+        if (player && !player.ended && !player.paused) {
+          WatchTime.stopWatching(currentMovieId, currentUserId);
+          console.log('[Tracker] Cleanup on unload');
+        }
+      }
+    });
+    
+    /* ─── Handle episode changes (for series pages) ─── */
+    function watchForEpisodeChange() {
+      var lastEpisodeId = currentMovieId;
+      
+      setInterval(function() {
+        var newInfo = getMovieInfo();
+        if (newInfo.id !== lastEpisodeId && newInfo.id !== 'unknown') {
+          console.log('[Tracker] Episode changed:', lastEpisodeId, '→', newInfo.id);
+          
+          // Stop current session
+          if (isTracking && typeof WatchTime !== 'undefined') {
+            WatchTime.stopWatching(currentMovieId, currentUserId);
+          }
+          
+          // Reset state
+          isTracking = false;
+          isPaused = false;
+          lastEpisodeId = newInfo.id;
+          currentMovieId = newInfo.id;
+          currentTitle = newInfo.title;
+          
+          // Re-initialize with new video element (if it changed)
+          getVideoPlayer(function(player) {
+            isTracking = false; // Reset again to allow new session
+            startTracking(player);
+          });
+        }
+      }, 1000);
+    }
+    
+    /* ─── INIT: Wait for DOM then start ─── */
+    function init() {
+      console.log('[Tracker] Initializing...');
+      
+      if (typeof WatchTime === 'undefined') {
+        console.error('[Tracker] WT.js not loaded! Make sure WT.js is included before this script.');
+        return;
+      }
+      
+      getVideoPlayer(function(player) {
+        startTracking(player);
+        watchForEpisodeChange();
       });
     }
-  </script>
+    
+    // Start when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      // DOM already loaded
+      init();
+    }
+    
+  })();
+</script>
 
-  <script src="js/optimizer.js"></script>
-  <script src="js/threat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-  <script src="config.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/WT.js"></script>
-
-  <!-- Watch Time Tracking -->
-  <script>
+    <!-- ========== POSTER → PLAYER PLAY INTERACTION (NEW — desktop only) ========== -->
+    <script>
     (function() {
       'use strict';
-      var VIDEO_ELEMENT_ID = 'videoPlayer';
-      var isTracking = false;
-      var isPaused = false;
-      var currentMovieId = null;
-      var currentUserId = null;
-      var currentTitle = '';
-      var positionInterval = null;
 
-      function getVideoPlayer(callback, retries) {
-        retries = retries || 0;
-        var maxRetries = 20;
-        var player = document.getElementById(VIDEO_ELEMENT_ID);
-        if (!player) {
-          var fallbacks = ['video', '#player', '.video-player', 'video[controls]'];
-          for (var i = 0; i < fallbacks.length; i++) {
-            player = document.querySelector(fallbacks[i]);
-            if (player) { break; }
-          }
-        }
-        if (player) { callback(player); return; }
-        if (retries < maxRetries) {
-          setTimeout(function() { getVideoPlayer(callback, retries + 1); }, 250);
-        }
+      var overlay   = document.getElementById('poster-play-overlay');
+      var playBtn   = document.getElementById('poster-play-btn');
+      var posterBg  = document.getElementById('poster-play-bg');
+      var wrapper   = document.getElementById('video-player-wrapper');
+
+      if (!overlay || !playBtn || !wrapper) return;
+
+      /* Only activate on desktop */
+      function isDesktop() {
+        return window.innerWidth >= 1024;
       }
-
-      function getMovieInfo() {
-        var params = new URLSearchParams(window.location.search);
-        return {
-          id: params.get('id') || params.get('movie') || params.get('episode') || 'unknown',
-          title: document.title || 'Unknown Title'
-        };
-      }
-
-      function getUserId() {
-        try {
-          if (typeof auth !== 'undefined' && auth && auth.currentUser) return auth.currentUser.uid;
-          if (typeof AppState !== 'undefined' && AppState && AppState.currentUser) return AppState.currentUser.uid;
-        } catch (e) {}
-        return null;
-      }
-
-      function startTracking(player) {
-        if (!player || isTracking) return;
-        currentMovieId = getMovieInfo().id;
-        currentUserId = getUserId();
-        currentTitle = getMovieInfo().title;
-
-        player.addEventListener('loadedmetadata', function() {
-          if (typeof WatchTime !== 'undefined') {
-            WatchTime.startWatching(currentMovieId, currentUserId, currentTitle, player.duration);
-            isTracking = true; isPaused = false;
-          }
-        });
-
-        if (player.readyState >= 1 && player.duration > 0) {
-          if (typeof WatchTime !== 'undefined' && !isTracking) {
-            WatchTime.startWatching(currentMovieId, currentUserId, currentTitle, player.duration);
-            isTracking = true;
-          }
-        }
-
-        player.addEventListener('play', function() {
-          if (!isTracking) {
-            if (typeof WatchTime !== 'undefined') {
-              WatchTime.startWatching(currentMovieId, currentUserId, currentTitle, player.duration || 0);
-              isTracking = true; isPaused = false;
-            }
-          } else if (isPaused) {
-            if (typeof WatchTime !== 'undefined') { WatchTime.resumeWatching(); isPaused = false; }
-          }
-        });
-
-        player.addEventListener('pause', function() {
-          if (!isTracking || player.ended) return;
-          if (typeof WatchTime !== 'undefined') { WatchTime.pauseWatching(); isPaused = true; }
-        });
-
-        player.addEventListener('ended', function() {
-          if (isTracking && typeof WatchTime !== 'undefined') {
-            WatchTime.completeMovie(currentMovieId, currentUserId);
-            isTracking = false; isPaused = false; stopPositionUpdates();
-          }
-        });
-
-        startPositionUpdates(player);
-      }
-
-      function startPositionUpdates(player) {
-        stopPositionUpdates();
-        positionInterval = setInterval(function() {
-          if (!player || !isTracking || isPaused || player.paused || player.ended) return;
-          if (typeof WatchTime !== 'undefined') WatchTime.updateWatchTime(currentMovieId, currentUserId, player.currentTime);
-        }, 3000);
-      }
-
-      function stopPositionUpdates() {
-        if (positionInterval) { clearInterval(positionInterval); positionInterval = null; }
-      }
-
-      window.addEventListener('beforeunload', function() {
-        stopPositionUpdates();
-        if (isTracking && typeof WatchTime !== 'undefined') {
-          var player = document.getElementById(VIDEO_ELEMENT_ID);
-          if (player && !player.ended && !player.paused) WatchTime.stopWatching(currentMovieId, currentUserId);
+      if (!isDesktop()) return;
+      window.addEventListener('resize', function() {
+        if (!isDesktop() && overlay.style.display !== 'none') {
+          overlay.style.display = 'none';
         }
       });
 
-      function init() {
-        if (typeof WatchTime === 'undefined') return;
-        getVideoPlayer(function(player) { startTracking(player); });
+      var videoReady = false;
+
+      function setupOverlay(video) {
+        if (videoReady) return;
+        videoReady = true;
+
+        /* ── Get poster image ── */
+        var posterUrl = '';
+
+        /* Primary: video poster attribute */
+        if (video.poster) {
+          posterUrl = video.poster;
+        }
+
+        /* Fallback 1: img inside wrapper */
+        if (!posterUrl) {
+          var img = wrapper.querySelector('img');
+          if (img && img.src) posterUrl = img.src;
+        }
+
+        /* Fallback 2: img inside video-player-col */
+        if (!posterUrl) {
+          var col = document.querySelector('.video-player-col');
+          if (col) {
+            var colImg = col.querySelector('img');
+            if (colImg && colImg.src) posterUrl = colImg.src;
+          }
+        }
+
+        /* Fallback 3: og:image meta */
+        if (!posterUrl) {
+          var ogImg = document.querySelector('meta[property="og:image"]');
+          if (ogImg && ogImg.content) posterUrl = ogImg.content;
+        }
+
+        if (posterUrl) {
+          posterBg.style.backgroundImage = 'url(' + posterUrl + ')';
+        }
+
+        /* ── Prevent preloading ── */
+        video.preload = 'none';
+        video.removeAttribute('autoplay');
+        video.pause();
+
+        /* ── Show overlay ── */
+        overlay.style.display = 'flex';
+
+        /* ── Play button click ── */
+        playBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          /* Enable loading */
+          video.preload = 'auto';
+
+          /* Fade out overlay */
+          overlay.classList.add('poster-fade-out');
+
+          /* Start playback */
+          video.play().catch(function(err) {
+            console.warn('[PlayOverlay] Play failed:', err);
+          });
+
+          /* Remove overlay after animation */
+          setTimeout(function() {
+            overlay.style.display = 'none';
+            overlay.classList.remove('poster-fade-out');
+          }, 350);
+        });
       }
 
-      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
-      else { init(); }
+      /* ── Observe for video element insertion ── */
+      var observer = new MutationObserver(function() {
+        var video = wrapper.querySelector('video');
+        if (video) {
+          observer.disconnect();
+          /* Small delay to let app.js finish setting attributes (poster, src, etc.) */
+          setTimeout(function() { setupOverlay(video); }, 150);
+        }
+      });
+
+      observer.observe(wrapper, { childList: true, subtree: true });
+
+      /* Also check immediately in case video already exists */
+      var existingVideo = wrapper.querySelector('video');
+      if (existingVideo) {
+        observer.disconnect();
+        setTimeout(function() { setupOverlay(existingVideo); }, 150);
+      }
+
     })();
-  </script>
-
-  <!-- Ad System -->
-  <script src="js/ad.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof AdSystem !== 'undefined') {
-        AdSystem.init('ad-banner-top', { position: 'all', maxAds: 10 });
-        AdSystem.init('ad-banner-bottom', { position: 'all', maxAds: 10 });
-      }
-    });
-    document.addEventListener('profileReady', function() {
-      if (typeof AdSystem !== 'undefined') {
-        AdSystem.init('ad-banner-top', { position: 'all', maxAds: 10 });
-        AdSystem.init('ad-banner-bottom', { position: 'all', maxAds: 10 });
-      }
-    });
-  </script>
-
-   <!-- ═══════════════════════════════════════════════════════════
-       DESKTOP LAYOUT SYNC SCRIPT v2
-       Robust data extraction with MutationObserver + polling
-       ═══════════════════════════════════════════════════════════ -->
-  <script>
-    (function() {
-      'use strict';
-
-      var synced = false;
-      var relatedSynced = false;
-
-      /* ─── Helpers ─── */
-      function $(id) { return document.getElementById(id); }
-      function textOf(id) {
-        var el = $(id);
-        if (!el) return '';
-        /* Get text from first <span> if exists, else full text */
-        var span = el.querySelector('span');
-        return span ? span.textContent.trim() : el.textContent.trim();
-      }
-      function setTxt(id, val) {
-        if (!val || !val.trim()) return;
-        var el = $(id);
-        if (el) el.textContent = val.trim();
-      }
-      function og(name) {
-        var m = document.querySelector('meta[property="og:' + name + '"]');
-        return m ? m.content.trim() : '';
-      }
-
-      /* ─── Find poster image from ANY source ─── */
-      function findPoster() {
-        /* 1. og:image */
-        var url = og('image');
-        if (url && url.indexOf('data:') === -1) return url;
-
-        /* 2. Any image inside the player wrapper */
-        var playerImg = document.querySelector('#video-player-wrapper img');
-        if (playerImg && playerImg.src && playerImg.src.indexOf('data:') === -1 && playerImg.naturalWidth > 50) {
-          return playerImg.src;
-        }
-
-        /* 3. First image in related videos */
-        var relImg = document.querySelector('#related-videos img');
-        if (relImg && relImg.src && relImg.src.indexOf('data:') === -1) return relImg.src;
-
-        /* 4. Any img with poster/cover in class or data attr */
-        var allImgs = document.querySelectorAll('img[class*="poster"], img[class*="cover"], img[data-poster], img[data-thumb]');
-        for (var i = 0; i < allImgs.length; i++) {
-          if (allImgs[i].src && allImgs[i].src.indexOf('data:') === -1 && allImgs[i].naturalWidth > 50) {
-            return allImgs[i].src;
-          }
-        }
-
-        /* 5. Twitter image meta */
-        var twImg = document.querySelector('meta[name="twitter:image"]');
-        if (twImg && twImg.content) return twImg.content;
-
-        return '';
-      }
-
-      /* ─── Extract metadata from multiple sources ─── */
-      function extractMeta() {
-        var params = new URLSearchParams(window.location.search);
-        var desc = textOf('video-description') || og('description') || '';
-        var title = textOf('video-title') || document.title || '';
-        var result = {};
-
-        /* Year — try URL, then regex from description, then title */
-        result.year = params.get('year') || '';
-        if (!result.year) {
-          var ym = desc.match(/\b((?:19|20)\d{2})\b/);
-          if (ym) result.year = ym[1];
-        }
-        if (!result.year) {
-          var ym2 = title.match(/\b((?:19|20)\d{2})\b/);
-          if (ym2) result.year = ym2[1];
-        }
-
-        /* Runtime — regex patterns from description */
-        result.runtime = params.get('runtime') || params.get('duration') || '';
-        if (!result.runtime) {
-          var rm = desc.match(/(\d+)\s*(?:hr|h|hour|hours)\s*(?:(\d+)\s*(?:min|m|minute|minutes))?/i);
-          if (rm) {
-            result.runtime = rm[2] ? rm[1] + 'h ' + rm[2] + 'm' : rm[1] + 'h';
-          } else {
-            var rm2 = desc.match(/(\d+)\s*(?:min|m|minutes)\b/i);
-            if (rm2) result.runtime = rm2[1] + ' min';
-          }
-        }
-        if (!result.runtime) {
-          var rm3 = desc.match(/(\d{1,3}):(\d{2})\b/);
-          if (rm3) result.runtime = rm3[1] + 'h ' + rm3[2] + 'm';
-        }
-
-        /* Rating — URL, og, or regex */
-        result.rating = params.get('rating') || params.get('imdb') || params.get('score') || '';
-        if (!result.rating) {
-          var rtm = desc.match(/(?:IMDb|Rating|Score)[:\s]*(\d+\.?\d*)(?:\s*\/\s*10)?/i);
-          if (rtm) result.rating = rtm[1] + '/10';
-        }
-
-        /* Quality */
-        result.quality = params.get('quality') || og('quality') || '';
-        if (!result.quality) {
-          var qm = desc.match(/\b(4K|UHD|1080p|720p|HD|SD|CAM|HDRIP|WEBRIP|BRRIP|BluRay|WEB-DL)\b/i);
-          if (qm) result.quality = qm[1].toUpperCase();
-        }
-
-        /* Language */
-        result.language = params.get('language') || params.get('lang') || og('language') || og('locale') || '';
-        if (!result.language) {
-          var lm = desc.match(/(?:Language|Lang)[:\s]*([A-Za-z\s]+?)(?:\n|,|\.|\s*$)/im);
-          if (lm) result.language = lm[1].trim();
-        }
-
-        /* Country */
-        result.country = params.get('country') || '';
-        if (!result.country) {
-          result.country = textOf('video-country-badge');
-        }
-
-        /* Genres — extract from description or URL */
-        result.genres = params.get('category') || params.get('genre') || '';
-        if (!result.genres) {
-          var gm = desc.match(/(?:Genre|Genres)[:\s]*([A-Za-z\s,\/]+?)(?:\n|\.|\s*$)/im);
-          if (gm) result.genres = gm[1].trim();
-        }
-
-        return result;
-      }
-
-      /* ─── Render genres as tags ─── */
-      function renderGenres(genreStr) {
-        var container = $('ds-genres');
-        if (!container || !genreStr) return;
-
-        /* Only render if empty */
-        if (container.children.length > 0) return;
-
-        var genres = genreStr.split(/[,\/|]+/);
-        genres.forEach(function(g) {
-          g = g.trim();
-          if (g.length < 2 || g.length > 25) return;
-          var tag = document.createElement('span');
-          tag.className = 'ds-genre-tag';
-          tag.textContent = g;
-          container.appendChild(tag);
-        });
-      }
-
-      /* ─── Apply all metadata to sidebar ─── */
-      function applyMeta() {
-        var meta = extractMeta();
-        var title = textOf('video-title');
-
-        if (!title) return false; /* Data not loaded yet */
-
-        /* Title */
-        setTxt('ds-title', title);
-        setTxt('dpm-title', title);
-
-        /* Poster */
-        var poster = findPoster();
-        if (poster) {
-          var dsPoster = $('ds-poster');
-          if (dsPoster && dsPoster.src.indexOf('data:image') === 0) {
-            dsPoster.src = poster;
-          }
-        }
-
-        /* Description */
-        setTxt('ds-description', textOf('video-description'));
-
-        /* Metadata fields */
-        setTxt('ds-rating', meta.rating || '—');
-        setTxt('ds-runtime', meta.runtime || '—');
-        setTxt('ds-year', meta.year || '—');
-        setTxt('ds-language', meta.language || '—');
-        setTxt('ds-country', meta.country || '—');
-        setTxt('ds-quality', meta.quality || '—');
-
-        /* Quality badge on poster */
-        if (meta.quality) {
-          setTxt('ds-poster-quality', meta.quality.toUpperCase());
-          setTxt('dpm-quality-badge', meta.quality.toUpperCase());
-        }
-
-        /* Genres */
-        renderGenres(meta.genres);
-
-        /* Player meta */
-        setTxt('dpm-views', textOf('video-views'));
-        setTxt('dpm-date', textOf('video-date'));
-        setTxt('dpm-country', textOf('video-country-badge'));
-        setTxt('dpm-like-count', textOf('like-count'));
-        setTxt('dpm-dislike-count', textOf('dislike-count'));
-
-        /* Show player meta */
-        var dpm = $('desktop-player-meta');
-        if (dpm) dpm.style.display = 'block';
-
-        return true;
-      }
-
-      /* ─── Sync related videos to desktop grid ─── */
-      function syncRelated() {
-        var source = $('related-videos');
-        var grid = $('drs-grid');
-        var section = $('desktop-related-section');
-        if (!source || !grid || !section) return false;
-
-        /* Broadest possible selector for related items */
-        var items = source.querySelectorAll('a, .widget-video-item, [class*="related-item"], [class*="video-item"]');
-        var realItems = [];
-
-        items.forEach(function(item) {
-          /* Must have a link or be a link itself */
-          var href = item.getAttribute('href') || item.querySelector('a[href]') ;
-          if (!href) return;
-          if (typeof href === 'object') href = href.getAttribute('href');
-          if (!href || href === '#') return;
-
-          /* Must have an image */
-          var img = item.querySelector('img');
-          if (!img) return;
-
-          realItems.push({ el: item, href: href, img: img });
-        });
-
-        if (realItems.length === 0) return false;
-
-        /* Don't re-render if same count */
-        if (relatedSynced && grid.children.length === realItems.length) {
-          /* Just update images that might have lazy-loaded */
-          realItems.forEach(function(item, i) {
-            var cardImg = grid.children[i] ? grid.children[i].querySelector('img') : null;
-            if (cardImg && cardImg.src.indexOf('data:') === 0 && item.img.src.indexOf('data:') !== 0) {
-              cardImg.src = item.img.src;
-            }
+    </script>
+    
+    <!-- ✅ LOAD ad.js HERE — before the init code -->
+    <script src="js/ad.js"></script>
+    
+    <script>
+      /* Initialize ad banners after page loads */
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof AdSystem !== 'undefined') {
+          AdSystem.init('ad-banner-top', {
+            position: 'all',
+            maxAds: 10
           });
-          return true;
-        }
-
-        grid.innerHTML = '';
-
-        realItems.forEach(function(item) {
-          var titleEl = item.el.querySelector('h3, h4, h5, [class*="title"], [class*="name"]');
-          var metaEl = item.el.querySelector('[class*="meta"], [class*="info"], [class*="detail"]');
-          var durEl = item.el.querySelector('[class*="duration"], [class*="runtime"], [class*="time"]');
-          var titleText = titleEl ? titleEl.textContent.trim() : 'Untitled';
-          var metaText = metaEl ? metaEl.textContent.trim() : '';
-          var durText = durEl ? durEl.textContent.trim() : '';
-          var imgSrc = item.img.src || '';
-
-          /* Skip placeholder images */
-          if (imgSrc.indexOf('data:') === 0) imgSrc = '';
-
-          var card = document.createElement('a');
-          card.href = item.href;
-          card.className = 'drs-card';
-          card.innerHTML =
-            '<div class="drs-card-poster">' +
-              (imgSrc ? '<img src="' + imgSrc + '" alt="' + titleText.replace(/"/g, '&quot;') + '" loading="lazy">' : '<div style="width:100%;height:100%;background:#1a1a1a"></div>') +
-              '<div class="drs-card-overlay"><div class="drs-card-play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>' +
-              (durText ? '<span class="drs-card-duration">' + durText + '</span>' : '') +
-              '<span class="drs-card-quality">HD</span>' +
-            '</div>' +
-            '<div class="drs-card-info">' +
-              '<h4 class="drs-card-title">' + titleText + '</h4>' +
-              (metaText ? '<span class="drs-card-meta">' + metaText + '</span>' : '') +
-            '</div>';
-
-          grid.appendChild(card);
-        });
-
-        relatedSynced = true;
-        section.style.display = 'block';
-        return true;
-      }
-
-      /* ─── Wire desktop buttons → mobile buttons ─── */
-      function wireButtons() {
-        var map = [
-          ['dpm-like',        'like-btn'],
-          ['dpm-dislike',     'dislike-btn'],
-          ['dpm-share',       'share-btn'],
-          ['dpm-favourite',   'favourite-btn'],
-          ['dpm-download',    'download-btn'],
-          ['ds-like-btn',     'like-btn'],
-          ['ds-fav-btn',      'favourite-btn'],
-          ['ds-share-btn',    'share-btn'],
-          ['ds-download-btn', 'download-btn']
-        ];
-
-        map.forEach(function(pair) {
-          var dBtn = $(pair[0]);
-          var mBtn = $(pair[1]);
-          if (dBtn && mBtn) {
-            dBtn.addEventListener('click', function(e) {
-              e.preventDefault();
-              mBtn.click();
-            });
-          }
-        });
-
-        /* Watch Now & Poster Play */
-        ['ds-watch-btn', 'ds-poster-play'].forEach(function(id) {
-          var btn = $(id);
-          if (!btn) return;
-          btn.addEventListener('click', function() {
-            var w = $('video-player-wrapper');
-            if (w) w.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(function() {
-              var v = w ? w.querySelector('video') : null;
-              if (v && v.paused) v.play().catch(function(){});
-            }, 500);
+          AdSystem.init('ad-banner-bottom', {
+            position: 'all',
+            maxAds: 10
           });
-        });
-
-        /* My List → favourite */
-        var listBtn = $('ds-list-btn');
-        if (listBtn) {
-          listBtn.addEventListener('click', function() {
-            var fb = $('favourite-btn');
-            if (fb) fb.click();
+        } else {
+          console.warn('AdSystem not loaded — check js/ad.js');
+        }
+      });
+      
+      /* Also init after auth state */
+      document.addEventListener('profileReady', function() {
+        if (typeof AdSystem !== 'undefined') {
+          AdSystem.init('ad-banner-top', {
+            position: 'all',
+            maxAds: 10
+          });
+          AdSystem.init('ad-banner-bottom', {
+            position: 'all',
+            maxAds: 10
           });
         }
-      }
-
-      /* ─── Sync button states continuously ─── */
-      function syncStates() {
-        var likeBtn = $('like-btn');
-        var dislikeBtn = $('dislike-btn');
-        var favBtn = $('favourite-btn');
-
-        ['dpm-like', 'ds-like-btn'].forEach(function(id) {
-          var btn = $(id);
-          if (btn && likeBtn) btn.classList.toggle('liked', likeBtn.classList.contains('liked'));
-        });
-
-        var dd = $('dpm-dislike');
-        if (dd && dislikeBtn) dd.classList.toggle('disliked', dislikeBtn.classList.contains('disliked'));
-
-        var df = $('dpm-favourite');
-        var dsf = $('ds-fav-btn');
-        if (df && favBtn) df.classList.toggle('liked', favBtn.classList.contains('liked'));
-        if (dsf && favBtn) dsf.classList.toggle('favourited', favBtn.classList.contains('liked'));
-
-        setTxt('dpm-like-count', textOf('like-count'));
-        setTxt('dpm-dislike-count', textOf('dislike-count'));
-      }
-
-      /* ─── MutationObserver — react when app.js inserts data ─── */
-      function watchForData() {
-        var targets = [
-          { el: $('video-info'),     handler: function() { synced = applyMeta(); } },
-          { el: $('related-videos'), handler: function() { syncRelated(); } }
-        ];
-
-        targets.forEach(function(t) {
-          if (!t.el) return;
-          var observer = new MutationObserver(function() {
-            t.handler();
-          });
-          observer.observe(t.el, { childList: true, subtree: true });
-        });
-      }
-
-      /* ─── Also watch for new images loading (lazy load) ─── */
-      function watchImages() {
-        document.addEventListener('load', function(e) {
-          if (e.target.tagName === 'IMG') {
-            /* Update poster if sidebar still has placeholder */
-            var dsPoster = $('ds-poster');
-            if (dsPoster && dsPoster.src.indexOf('data:') === 0) {
-              var poster = findPoster();
-              if (poster) dsPoster.src = poster;
-            }
-
-            /* Update related card images */
-            if (relatedSynced) {
-              var cards = document.querySelectorAll('.drs-card-poster img');
-              cards.forEach(function(cardImg) {
-                if (cardImg.src.indexOf('data:') === 0) {
-                  /* Find matching source image */
-                  var srcImgs = document.querySelectorAll('#related-videos img');
-                  for (var i = 0; i < srcImgs.length; i++) {
-                    if (srcImgs[i] === e.target) {
-                      if (e.target.src.indexOf('data:') !== 0) {
-                        cardImg.src = e.target.src;
-                      }
-                      break;
-                    }
-                  }
-                }
-              });
-            }
-          }
-        }, true);
-      }
-
-      /* ─── Polling fallback ─── */
-      function poll() {
-        var attempts = 0;
-        var maxAttempts = 120; /* 120 * 500ms = 60 seconds */
-        var interval = setInterval(function() {
-          attempts++;
-
-          /* Try to sync meta */
-          if (!synced) {
-            synced = applyMeta();
-          } else {
-            /* Even after synced, re-check poster and description */
-            var poster = findPoster();
-            if (poster) {
-              var dsPoster = $('ds-poster');
-              if (dsPoster && dsPoster.src.indexOf('data:') === 0) {
-                dsPoster.src = poster;
-              }
-            }
-            setTxt('ds-description', textOf('video-description'));
-          }
-
-          /* Try to sync related */
-          syncRelated();
-
-          /* Sync button states */
-          syncStates();
-
-          if (attempts >= maxAttempts) {
-            clearInterval(interval);
-          }
-        }, 500);
-      }
-
-      /* ─── INIT ─── */
-      function init() {
-        wireButtons();
-        watchForData();
-        watchImages();
-
-        /* Initial attempt */
-        setTimeout(function() { synced = applyMeta(); }, 300);
-        setTimeout(function() { syncRelated(); }, 500);
-        setTimeout(function() { synced = applyMeta(); syncRelated(); }, 1500);
-        setTimeout(function() { synced = applyMeta(); syncRelated(); }, 3000);
-
-        /* Start polling */
-        poll();
-
-        /* Re-run on auth/profile ready */
-        document.addEventListener('profileReady', function() {
-          setTimeout(function() { synced = applyMeta(); syncRelated(); }, 300);
-          setTimeout(function() { synced = applyMeta(); syncRelated(); }, 1000);
-        });
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
-    })();
-  </script>
-
-</body>
+      });
+    </script>
+    </body>
 </html>
