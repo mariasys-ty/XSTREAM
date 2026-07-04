@@ -1424,119 +1424,266 @@
     });
   </script>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       DESKTOP LAYOUT SYNC SCRIPT
-       Mirrors data from mobile elements to desktop elements
-       Wires desktop buttons to existing mobile button logic
-       Transforms related list into premium cards
+   <!-- ═══════════════════════════════════════════════════════════
+       DESKTOP LAYOUT SYNC SCRIPT v2
+       Robust data extraction with MutationObserver + polling
        ═══════════════════════════════════════════════════════════ -->
   <script>
     (function() {
       'use strict';
 
-      var syncCount = 0;
-      var maxSyncs = 60;
-      var lastTitle = '';
+      var synced = false;
+      var relatedSynced = false;
 
       /* ─── Helpers ─── */
-      function getText(id) {
-        var el = document.getElementById(id);
-        return el ? el.textContent.trim() : '';
+      function $(id) { return document.getElementById(id); }
+      function textOf(id) {
+        var el = $(id);
+        if (!el) return '';
+        /* Get text from first <span> if exists, else full text */
+        var span = el.querySelector('span');
+        return span ? span.textContent.trim() : el.textContent.trim();
+      }
+      function setTxt(id, val) {
+        if (!val || !val.trim()) return;
+        var el = $(id);
+        if (el) el.textContent = val.trim();
+      }
+      function og(name) {
+        var m = document.querySelector('meta[property="og:' + name + '"]');
+        return m ? m.content.trim() : '';
       }
 
-      function setText(id, text) {
-        var el = document.getElementById(id);
-        if (el && text) el.textContent = text;
-      }
+      /* ─── Find poster image from ANY source ─── */
+      function findPoster() {
+        /* 1. og:image */
+        var url = og('image');
+        if (url && url.indexOf('data:') === -1) return url;
 
-      function getSpanText(parentId) {
-        var parent = document.getElementById(parentId);
-        if (!parent) return '';
-        var span = parent.querySelector('span');
-        return span ? span.textContent.trim() : '';
-      }
-
-      /* ─── Main Sync ─── */
-      function syncDesktop() {
-        var title = getText('video-title');
-
-        /* Stop syncing if no data yet */
-        if (!title || title === 'Loading...') {
-          syncCount++;
-          if (syncCount < maxSyncs) setTimeout(syncDesktop, 800);
-          return;
+        /* 2. Any image inside the player wrapper */
+        var playerImg = document.querySelector('#video-player-wrapper img');
+        if (playerImg && playerImg.src && playerImg.src.indexOf('data:') === -1 && playerImg.naturalWidth > 50) {
+          return playerImg.src;
         }
 
-        /* Stop syncing if data hasn't changed (stable state) */
-        if (title === lastTitle && syncCount > 5) return;
-        lastTitle = title;
-        syncCount++;
+        /* 3. First image in related videos */
+        var relImg = document.querySelector('#related-videos img');
+        if (relImg && relImg.src && relImg.src.indexOf('data:') === -1) return relImg.src;
 
-        /* ── Player Meta ── */
-        setText('dpm-title', title);
-        setText('dpm-views', getSpanText('video-views'));
-        setText('dpm-date', getSpanText('video-date'));
-        setText('dpm-country', getSpanText('video-country-badge'));
-        setText('dpm-like-count', getText('like-count'));
-        setText('dpm-dislike-count', getText('dislike-count'));
-
-        /* ── Sidebar Info ── */
-        setText('ds-title', title);
-        setText('ds-description', getText('video-description'));
-        setText('ds-country', getSpanText('video-country-badge'));
-
-        /* ── Poster ── */
-        var posterUrl = '';
-        var ogImg = document.querySelector('meta[property="og:image"]');
-        if (ogImg && ogImg.content) posterUrl = ogImg.content;
-        if (!posterImg) {
-          /* Try to get from first related video thumbnail as fallback */
-          var relImg = document.querySelector('#related-videos img');
-          if (relImg) posterUrl = relImg.src;
-        }
-        if (posterUrl) {
-          var dsPoster = document.getElementById('ds-poster');
-          if (dsPoster && dsPoster.src.indexOf('data:image') === 0) {
-            dsPoster.src = posterUrl;
+        /* 4. Any img with poster/cover in class or data attr */
+        var allImgs = document.querySelectorAll('img[class*="poster"], img[class*="cover"], img[data-poster], img[data-thumb]');
+        for (var i = 0; i < allImgs.length; i++) {
+          if (allImgs[i].src && allImgs[i].src.indexOf('data:') === -1 && allImgs[i].naturalWidth > 50) {
+            return allImgs[i].src;
           }
         }
 
-        /* ── Show desktop meta ── */
-        var dpm = document.getElementById('desktop-player-meta');
-        if (dpm) dpm.style.display = 'block';
+        /* 5. Twitter image meta */
+        var twImg = document.querySelector('meta[name="twitter:image"]');
+        if (twImg && twImg.content) return twImg.content;
 
-        /* ── Sync Related Videos ── */
-        syncRelatedGrid();
-
-        /* Continue polling for dynamic updates */
-        if (syncCount < maxSyncs) setTimeout(syncDesktop, 1500);
+        return '';
       }
 
-      /* ─── Transform Related List → Premium Cards ─── */
-      function syncRelatedGrid() {
-        var source = document.getElementById('related-videos');
-        var grid = document.getElementById('drs-grid');
-        if (!source || !grid) return;
+      /* ─── Extract metadata from multiple sources ─── */
+      function extractMeta() {
+        var params = new URLSearchParams(window.location.search);
+        var desc = textOf('video-description') || og('description') || '';
+        var title = textOf('video-title') || document.title || '';
+        var result = {};
 
-        /* Skip if already synced with same count */
-        var sourceItems = source.querySelectorAll('a[href*="video.html"], .widget-video-item');
-        if (grid.dataset.synced === String(sourceItems.length)) return;
+        /* Year — try URL, then regex from description, then title */
+        result.year = params.get('year') || '';
+        if (!result.year) {
+          var ym = desc.match(/\b((?:19|20)\d{2})\b/);
+          if (ym) result.year = ym[1];
+        }
+        if (!result.year) {
+          var ym2 = title.match(/\b((?:19|20)\d{2})\b/);
+          if (ym2) result.year = ym2[1];
+        }
+
+        /* Runtime — regex patterns from description */
+        result.runtime = params.get('runtime') || params.get('duration') || '';
+        if (!result.runtime) {
+          var rm = desc.match(/(\d+)\s*(?:hr|h|hour|hours)\s*(?:(\d+)\s*(?:min|m|minute|minutes))?/i);
+          if (rm) {
+            result.runtime = rm[2] ? rm[1] + 'h ' + rm[2] + 'm' : rm[1] + 'h';
+          } else {
+            var rm2 = desc.match(/(\d+)\s*(?:min|m|minutes)\b/i);
+            if (rm2) result.runtime = rm2[1] + ' min';
+          }
+        }
+        if (!result.runtime) {
+          var rm3 = desc.match(/(\d{1,3}):(\d{2})\b/);
+          if (rm3) result.runtime = rm3[1] + 'h ' + rm3[2] + 'm';
+        }
+
+        /* Rating — URL, og, or regex */
+        result.rating = params.get('rating') || params.get('imdb') || params.get('score') || '';
+        if (!result.rating) {
+          var rtm = desc.match(/(?:IMDb|Rating|Score)[:\s]*(\d+\.?\d*)(?:\s*\/\s*10)?/i);
+          if (rtm) result.rating = rtm[1] + '/10';
+        }
+
+        /* Quality */
+        result.quality = params.get('quality') || og('quality') || '';
+        if (!result.quality) {
+          var qm = desc.match(/\b(4K|UHD|1080p|720p|HD|SD|CAM|HDRIP|WEBRIP|BRRIP|BluRay|WEB-DL)\b/i);
+          if (qm) result.quality = qm[1].toUpperCase();
+        }
+
+        /* Language */
+        result.language = params.get('language') || params.get('lang') || og('language') || og('locale') || '';
+        if (!result.language) {
+          var lm = desc.match(/(?:Language|Lang)[:\s]*([A-Za-z\s]+?)(?:\n|,|\.|\s*$)/im);
+          if (lm) result.language = lm[1].trim();
+        }
+
+        /* Country */
+        result.country = params.get('country') || '';
+        if (!result.country) {
+          result.country = textOf('video-country-badge');
+        }
+
+        /* Genres — extract from description or URL */
+        result.genres = params.get('category') || params.get('genre') || '';
+        if (!result.genres) {
+          var gm = desc.match(/(?:Genre|Genres)[:\s]*([A-Za-z\s,\/]+?)(?:\n|\.|\s*$)/im);
+          if (gm) result.genres = gm[1].trim();
+        }
+
+        return result;
+      }
+
+      /* ─── Render genres as tags ─── */
+      function renderGenres(genreStr) {
+        var container = $('ds-genres');
+        if (!container || !genreStr) return;
+
+        /* Only render if empty */
+        if (container.children.length > 0) return;
+
+        var genres = genreStr.split(/[,\/|]+/);
+        genres.forEach(function(g) {
+          g = g.trim();
+          if (g.length < 2 || g.length > 25) return;
+          var tag = document.createElement('span');
+          tag.className = 'ds-genre-tag';
+          tag.textContent = g;
+          container.appendChild(tag);
+        });
+      }
+
+      /* ─── Apply all metadata to sidebar ─── */
+      function applyMeta() {
+        var meta = extractMeta();
+        var title = textOf('video-title');
+
+        if (!title) return false; /* Data not loaded yet */
+
+        /* Title */
+        setTxt('ds-title', title);
+        setTxt('dpm-title', title);
+
+        /* Poster */
+        var poster = findPoster();
+        if (poster) {
+          var dsPoster = $('ds-poster');
+          if (dsPoster && dsPoster.src.indexOf('data:image') === 0) {
+            dsPoster.src = poster;
+          }
+        }
+
+        /* Description */
+        setTxt('ds-description', textOf('video-description'));
+
+        /* Metadata fields */
+        setTxt('ds-rating', meta.rating || '—');
+        setTxt('ds-runtime', meta.runtime || '—');
+        setTxt('ds-year', meta.year || '—');
+        setTxt('ds-language', meta.language || '—');
+        setTxt('ds-country', meta.country || '—');
+        setTxt('ds-quality', meta.quality || '—');
+
+        /* Quality badge on poster */
+        if (meta.quality) {
+          setTxt('ds-poster-quality', meta.quality.toUpperCase());
+          setTxt('dpm-quality-badge', meta.quality.toUpperCase());
+        }
+
+        /* Genres */
+        renderGenres(meta.genres);
+
+        /* Player meta */
+        setTxt('dpm-views', textOf('video-views'));
+        setTxt('dpm-date', textOf('video-date'));
+        setTxt('dpm-country', textOf('video-country-badge'));
+        setTxt('dpm-like-count', textOf('like-count'));
+        setTxt('dpm-dislike-count', textOf('dislike-count'));
+
+        /* Show player meta */
+        var dpm = $('desktop-player-meta');
+        if (dpm) dpm.style.display = 'block';
+
+        return true;
+      }
+
+      /* ─── Sync related videos to desktop grid ─── */
+      function syncRelated() {
+        var source = $('related-videos');
+        var grid = $('drs-grid');
+        var section = $('desktop-related-section');
+        if (!source || !grid || !section) return false;
+
+        /* Broadest possible selector for related items */
+        var items = source.querySelectorAll('a, .widget-video-item, [class*="related-item"], [class*="video-item"]');
+        var realItems = [];
+
+        items.forEach(function(item) {
+          /* Must have a link or be a link itself */
+          var href = item.getAttribute('href') || item.querySelector('a[href]') ;
+          if (!href) return;
+          if (typeof href === 'object') href = href.getAttribute('href');
+          if (!href || href === '#') return;
+
+          /* Must have an image */
+          var img = item.querySelector('img');
+          if (!img) return;
+
+          realItems.push({ el: item, href: href, img: img });
+        });
+
+        if (realItems.length === 0) return false;
+
+        /* Don't re-render if same count */
+        if (relatedSynced && grid.children.length === realItems.length) {
+          /* Just update images that might have lazy-loaded */
+          realItems.forEach(function(item, i) {
+            var cardImg = grid.children[i] ? grid.children[i].querySelector('img') : null;
+            if (cardImg && cardImg.src.indexOf('data:') === 0 && item.img.src.indexOf('data:') !== 0) {
+              cardImg.src = item.img.src;
+            }
+          });
+          return true;
+        }
 
         grid.innerHTML = '';
 
-        sourceItems.forEach(function(item) {
-          var img = item.querySelector('img');
-          var titleEl = item.querySelector('.widget-video-title, h4, h3, .video-title');
-          var metaEl = item.querySelector('.widget-video-meta, .widget-video-duration');
-          var durEl = item.querySelector('.widget-video-duration');
-          var href = item.getAttribute('href') || '#';
+        realItems.forEach(function(item) {
+          var titleEl = item.el.querySelector('h3, h4, h5, [class*="title"], [class*="name"]');
+          var metaEl = item.el.querySelector('[class*="meta"], [class*="info"], [class*="detail"]');
+          var durEl = item.el.querySelector('[class*="duration"], [class*="runtime"], [class*="time"]');
           var titleText = titleEl ? titleEl.textContent.trim() : 'Untitled';
           var metaText = metaEl ? metaEl.textContent.trim() : '';
           var durText = durEl ? durEl.textContent.trim() : '';
-          var imgSrc = img ? img.src : '';
+          var imgSrc = item.img.src || '';
+
+          /* Skip placeholder images */
+          if (imgSrc.indexOf('data:') === 0) imgSrc = '';
 
           var card = document.createElement('a');
-          card.href = href;
+          card.href = item.href;
           card.className = 'drs-card';
           card.innerHTML =
             '<div class="drs-card-poster">' +
@@ -1553,16 +1700,12 @@
           grid.appendChild(card);
         });
 
-        grid.dataset.synced = String(sourceItems.length);
-
-        /* Show section if cards exist */
-        var section = document.getElementById('desktop-related-section');
-        if (section && sourceItems.length > 0) {
-          section.style.display = 'block';
-        }
+        relatedSynced = true;
+        section.style.display = 'block';
+        return true;
       }
 
-      /* ─── Wire Desktop Buttons → Mobile Button Actions ─── */
+      /* ─── Wire desktop buttons → mobile buttons ─── */
       function wireButtons() {
         var map = [
           ['dpm-like',        'like-btn'],
@@ -1577,130 +1720,165 @@
         ];
 
         map.forEach(function(pair) {
-          var desktopBtn = document.getElementById(pair[0]);
-          var mobileBtn = document.getElementById(pair[1]);
-          if (desktopBtn && mobileBtn) {
-            desktopBtn.addEventListener('click', function(e) {
+          var dBtn = $(pair[0]);
+          var mBtn = $(pair[1]);
+          if (dBtn && mBtn) {
+            dBtn.addEventListener('click', function(e) {
               e.preventDefault();
-              mobileBtn.click();
+              mBtn.click();
             });
           }
         });
 
-        /* Watch Now & Poster Play → scroll to player & play */
-        var watchBtn = document.getElementById('ds-watch-btn');
-        var posterPlay = document.getElementById('ds-poster-play');
-        [watchBtn, posterPlay].forEach(function(btn) {
+        /* Watch Now & Poster Play */
+        ['ds-watch-btn', 'ds-poster-play'].forEach(function(id) {
+          var btn = $(id);
           if (!btn) return;
           btn.addEventListener('click', function() {
-            var wrapper = document.getElementById('video-player-wrapper');
-            if (wrapper) wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            var w = $('video-player-wrapper');
+            if (w) w.scrollIntoView({ behavior: 'smooth', block: 'center' });
             setTimeout(function() {
-              var video = wrapper ? wrapper.querySelector('video') : null;
-              if (video && video.paused) video.play().catch(function(){});
+              var v = w ? w.querySelector('video') : null;
+              if (v && v.paused) v.play().catch(function(){});
             }, 500);
           });
         });
 
-        /* Add to List → trigger favourite */
-        var listBtn = document.getElementById('ds-list-btn');
+        /* My List → favourite */
+        var listBtn = $('ds-list-btn');
         if (listBtn) {
           listBtn.addEventListener('click', function() {
-            var favBtn = document.getElementById('favourite-btn');
-            if (favBtn) favBtn.click();
+            var fb = $('favourite-btn');
+            if (fb) fb.click();
           });
         }
-
-        /* Sync like/dislike state to desktop buttons */
-        syncButtonStates();
       }
 
-      function syncButtonStates() {
-        setInterval(function() {
-          var likeBtn = document.getElementById('like-btn');
-          var dislikeBtn = document.getElementById('dislike-btn');
-          var favBtn = document.getElementById('favourite-btn');
+      /* ─── Sync button states continuously ─── */
+      function syncStates() {
+        var likeBtn = $('like-btn');
+        var dislikeBtn = $('dislike-btn');
+        var favBtn = $('favourite-btn');
 
-          /* Like states */
-          ['dpm-like', 'ds-like-btn'].forEach(function(id) {
-            var btn = document.getElementById(id);
-            if (btn && likeBtn) {
-              btn.classList.toggle('liked', likeBtn.classList.contains('liked'));
-            }
+        ['dpm-like', 'ds-like-btn'].forEach(function(id) {
+          var btn = $(id);
+          if (btn && likeBtn) btn.classList.toggle('liked', likeBtn.classList.contains('liked'));
+        });
+
+        var dd = $('dpm-dislike');
+        if (dd && dislikeBtn) dd.classList.toggle('disliked', dislikeBtn.classList.contains('disliked'));
+
+        var df = $('dpm-favourite');
+        var dsf = $('ds-fav-btn');
+        if (df && favBtn) df.classList.toggle('liked', favBtn.classList.contains('liked'));
+        if (dsf && favBtn) dsf.classList.toggle('favourited', favBtn.classList.contains('liked'));
+
+        setTxt('dpm-like-count', textOf('like-count'));
+        setTxt('dpm-dislike-count', textOf('dislike-count'));
+      }
+
+      /* ─── MutationObserver — react when app.js inserts data ─── */
+      function watchForData() {
+        var targets = [
+          { el: $('video-info'),     handler: function() { synced = applyMeta(); } },
+          { el: $('related-videos'), handler: function() { syncRelated(); } }
+        ];
+
+        targets.forEach(function(t) {
+          if (!t.el) return;
+          var observer = new MutationObserver(function() {
+            t.handler();
           });
+          observer.observe(t.el, { childList: true, subtree: true });
+        });
+      }
 
-          /* Dislike state */
-          var dpmDislike = document.getElementById('dpm-dislike');
-          if (dpmDislike && dislikeBtn) {
-            dpmDislike.classList.toggle('disliked', dislikeBtn.classList.contains('disliked'));
+      /* ─── Also watch for new images loading (lazy load) ─── */
+      function watchImages() {
+        document.addEventListener('load', function(e) {
+          if (e.target.tagName === 'IMG') {
+            /* Update poster if sidebar still has placeholder */
+            var dsPoster = $('ds-poster');
+            if (dsPoster && dsPoster.src.indexOf('data:') === 0) {
+              var poster = findPoster();
+              if (poster) dsPoster.src = poster;
+            }
+
+            /* Update related card images */
+            if (relatedSynced) {
+              var cards = document.querySelectorAll('.drs-card-poster img');
+              cards.forEach(function(cardImg) {
+                if (cardImg.src.indexOf('data:') === 0) {
+                  /* Find matching source image */
+                  var srcImgs = document.querySelectorAll('#related-videos img');
+                  for (var i = 0; i < srcImgs.length; i++) {
+                    if (srcImgs[i] === e.target) {
+                      if (e.target.src.indexOf('data:') !== 0) {
+                        cardImg.src = e.target.src;
+                      }
+                      break;
+                    }
+                  }
+                }
+              });
+            }
+          }
+        }, true);
+      }
+
+      /* ─── Polling fallback ─── */
+      function poll() {
+        var attempts = 0;
+        var maxAttempts = 120; /* 120 * 500ms = 60 seconds */
+        var interval = setInterval(function() {
+          attempts++;
+
+          /* Try to sync meta */
+          if (!synced) {
+            synced = applyMeta();
+          } else {
+            /* Even after synced, re-check poster and description */
+            var poster = findPoster();
+            if (poster) {
+              var dsPoster = $('ds-poster');
+              if (dsPoster && dsPoster.src.indexOf('data:') === 0) {
+                dsPoster.src = poster;
+              }
+            }
+            setTxt('ds-description', textOf('video-description'));
           }
 
-          /* Favourite state */
-          var dpmFav = document.getElementById('dpm-favourite');
-          var dsFav = document.getElementById('ds-fav-btn');
-          if (dpmFav && favBtn) dpmFav.classList.toggle('liked', favBtn.classList.contains('liked'));
-          if (dsFav && favBtn) dsFav.classList.toggle('favourited', favBtn.classList.contains('liked'));
+          /* Try to sync related */
+          syncRelated();
 
-          /* Update counts */
-          setText('dpm-like-count', getText('like-count'));
-          setText('dpm-dislike-count', getText('dislike-count'));
+          /* Sync button states */
+          syncStates();
+
+          if (attempts >= maxAttempts) {
+            clearInterval(interval);
+          }
         }, 500);
       }
 
-      /* ─── Extract extra metadata from page (if available) ─── */
-      function extractMetadata() {
-        /* Try og: tags */
-        function og(name) {
-          var meta = document.querySelector('meta[property="og:' + name + '"]');
-          return meta ? meta.content : '';
-        }
-
-        var quality = og('quality') || '';
-        var lang = og('language') || og('locale') || '';
-        var year = '';
-        var desc = og('description') || '';
-
-        /* Try to extract year from description or title */
-        if (desc || getText('video-description')) {
-          var text = desc || getText('video-description');
-          var yearMatch = text.match(/\b(19|20)\d{2}\b/);
-          if (yearMatch) year = yearMatch[0];
-        }
-
-        /* Try to extract from URL params */
-        var params = new URLSearchParams(window.location.search);
-        if (!quality) quality = params.get('quality') || '';
-        if (!lang) lang = params.get('language') || params.get('lang') || '';
-        if (!year) year = params.get('year') || '';
-
-        /* Apply to sidebar */
-        if (quality) {
-          setText('ds-quality', quality.toUpperCase());
-          setText('ds-poster-quality', quality.toUpperCase());
-          setText('dpm-quality-badge', quality.toUpperCase());
-        }
-        if (lang) setText('ds-language', lang.charAt(0).toUpperCase() + lang.slice(1));
-        if (year) setText('ds-year', year);
-
-        /* Try to get rating from page */
-        var rating = params.get('rating') || params.get('imdb') || '';
-        if (rating) setText('ds-rating', rating);
-      }
-
-      /* ─── Init ─── */
+      /* ─── INIT ─── */
       function init() {
-        extractMetadata();
         wireButtons();
+        watchForData();
+        watchImages();
 
-        /* Start sync after a short delay for app.js to populate */
-        setTimeout(syncDesktop, 600);
-        setTimeout(syncDesktop, 1500);
-        setTimeout(syncDesktop, 3000);
+        /* Initial attempt */
+        setTimeout(function() { synced = applyMeta(); }, 300);
+        setTimeout(function() { syncRelated(); }, 500);
+        setTimeout(function() { synced = applyMeta(); syncRelated(); }, 1500);
+        setTimeout(function() { synced = applyMeta(); syncRelated(); }, 3000);
 
-        /* Also sync when profile is ready */
+        /* Start polling */
+        poll();
+
+        /* Re-run on auth/profile ready */
         document.addEventListener('profileReady', function() {
-          setTimeout(syncDesktop, 300);
-          setTimeout(extractMetadata, 400);
+          setTimeout(function() { synced = applyMeta(); syncRelated(); }, 300);
+          setTimeout(function() { synced = applyMeta(); syncRelated(); }, 1000);
         });
       }
 
