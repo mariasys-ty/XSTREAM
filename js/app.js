@@ -931,10 +931,22 @@ function fetchVideos(limit, startAfterKey, category, sort, search) {
       seenIds[child.key] = true;
     });
     
-    // Filter by category
+        // Filter by category — universal word search across all text fields
     if (category && category !== 'all') {
+      var catWord = category.toLowerCase().trim();
+      // Escape regex special characters (but keep hyphens/slashes for the next step)
+      var safeWord = catWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      // Allow hyphens and slashes to match spaces, hyphens, or slashes in the text
+      // e.g., "science-fiction" matches "Science Fiction", "science-fiction", "science/fiction"
+      var pattern = safeWord.replace(/[-\/]/g, '[\\s\\-\\/]+');
+      // Use flexible boundaries instead of \b (which breaks on hyphens/slashes)
+      var catRegex = new RegExp('(?:^|[^a-zA-Z0-9])' + pattern + '(?:$|[^a-zA-Z0-9])', 'i');
+      
       videos = videos.filter(function(v) {
-        return (v.category || '').toLowerCase() === category.toLowerCase();
+        var searchText = [
+          v.title, v.description, v.category, v.genre, v.country, v.rated, v.director, v.vjName
+        ].join(' ').toLowerCase();
+        return catRegex.test(searchText);
       });
     }
     
@@ -4196,6 +4208,109 @@ function filterAndRender() {
   
   if (typeof initLazyLoading === 'function') initLazyLoading();
 }
+function initViewAllLiveSearch() {
+  var searchInput = document.getElementById('viewall-search-input');
+  var clearBtn = document.getElementById('viewall-search-clear');
+  var grid = document.getElementById('videos-grid');
+  var noVideos = document.getElementById('no-videos');
+  var loadMoreContainer = document.getElementById('load-more-container');
+  var activeFiltersDiv = document.getElementById('active-filters');
+  var activeFilterChips = document.getElementById('active-filter-chips');
+  var clearAllFilters = document.getElementById('clear-all-filters');
+  
+  if (!searchInput || !grid) return;
+  
+  var searchTimeout = null;
+  
+  function performLiveSearch(query) {
+    grid.innerHTML = '';
+    noVideos.style.display = 'none';
+    if (loadMoreContainer) loadMoreContainer.style.display = 'none';
+    
+    if (!query || query.trim().length < 2) {
+      activeFiltersDiv.style.display = 'none';
+      // Reload default view (fallback to fetchVideos if page function missing)
+      if (typeof loadViewAllVideos === 'function') {
+        loadViewAllVideos();
+      } else {
+        fetchVideos(AppState.itemsPerPage, null, 'all', 'recent', '').then(function(res) {
+          renderResults(res.videos);
+        });
+      }
+      return;
+    }
+    
+    // Show active filter chip
+    if (activeFiltersDiv) {
+      activeFiltersDiv.style.display = 'flex';
+      if (activeFilterChips) {
+        activeFilterChips.innerHTML = '<span class="filter-chip">Search: "' + escapeHTML(query) + '"</span>';
+      }
+    }
+    
+    // Show skeletons while loading
+    for (var i = 0; i < 8; i++) {
+      grid.innerHTML += '<div class="skeleton-card"><div class="skeleton skeleton-thumb"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>';
+    }
+    
+    // Fetch universally using the search parameter
+    fetchVideos(AppState.itemsPerPage, null, 'all', 'recent', query).then(function(res) {
+      grid.innerHTML = '';
+      renderResults(res.videos);
+    });
+  }
+  
+  function renderResults(videos) {
+    if (videos.length === 0) {
+      noVideos.style.display = 'flex';
+      return;
+    }
+    for (var i = 0; i < videos.length; i++) {
+      grid.appendChild(createVideoCard(videos[i]));
+    }
+  }
+  
+  // Live typing listener (debounced at 400ms)
+  searchInput.addEventListener('input', function() {
+    var query = this.value.trim();
+    clearBtn.style.display = query.length > 0 ? 'block' : 'none';
+    
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function() {
+      performLiveSearch(query);
+    }, 400);
+  });
+  
+  // Clear button
+  if (clearBtn) {
+    clearBtn.addEventListener('click', function() {
+      searchInput.value = '';
+      clearBtn.style.display = 'none';
+      performLiveSearch('');
+    });
+  }
+  
+  // "Clear All" text button
+  if (clearAllFilters) {
+    clearAllFilters.addEventListener('click', function() {
+      searchInput.value = '';
+      clearBtn.style.display = 'none';
+      performLiveSearch('');
+    });
+  }
+  
+  // CATCH OLD LINKS: If user comes from homepage sidebar (e.g., ?category=action or ?search=avatar)
+  var urlParams = new URLSearchParams(window.location.search);
+  var initialSearch = urlParams.get('search') || urlParams.get('q') || urlParams.get('category') || '';
+  if (initialSearch && initialSearch.toLowerCase() !== 'all') {
+    searchInput.value = initialSearch;
+    clearBtn.style.display = 'block';
+    performLiveSearch(initialSearch);
+  }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initViewAllLiveSearch);
 /* =============================================
    Profile Page
    ============================================= */
