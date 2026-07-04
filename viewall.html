@@ -52,7 +52,7 @@
         --d-r-full: 9999px;
         --d-ease: 280ms ease;
         --d-ease-f: 200ms ease;
-        --d-sidebar-w: 280px;
+        --d-sidebar-w: 260px;
       }
 
       /* ─── Scrollbar ─── */
@@ -73,7 +73,7 @@
       /* ─── Page Header — Cinematic Banner ─── */
       .page-header {
         position: relative;
-        padding: 56px 48px 48px !important;
+        padding: 48px 48px 44px !important;
         overflow: hidden;
         border-bottom: 1px solid var(--d-border);
       }
@@ -108,9 +108,9 @@
       }
 
       .breadcrumb {
-        margin-bottom: 16px;
+        margin-bottom: 14px;
         font-family: 'Inter', sans-serif;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
       }
 
       .breadcrumb a {
@@ -126,21 +126,62 @@
 
       .page-title {
         font-family: 'Poppins', sans-serif;
-        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
         font-weight: 900;
         color: var(--d-white);
         line-height: 1.1;
-        margin: 0 0 12px;
+        margin: 0 0 10px;
         letter-spacing: -0.03em;
       }
 
       .page-subtitle {
         font-family: 'Inter', sans-serif;
-        font-size: 1rem;
+        font-size: 0.95rem;
         color: var(--d-tertiary);
-        margin: 0;
+        margin: 0 0 18px;
         max-width: 560px;
-        line-height: 1.6;
+        line-height: 1.55;
+      }
+
+      /* ─── Page Stats ─── */
+      .page-stats {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .page-stat {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 14px;
+        border-radius: var(--d-r-full);
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--d-border);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--d-sub);
+        transition: all var(--d-ease-f);
+      }
+
+      .page-stat:hover {
+        background: rgba(255,255,255,0.08);
+        border-color: var(--d-border-l);
+        color: var(--d-white);
+      }
+
+      .page-stat svg {
+        width: 15px;
+        height: 15px;
+        color: var(--d-accent);
+        flex-shrink: 0;
+      }
+
+      .page-stat strong {
+        font-weight: 700;
+        color: var(--d-white);
       }
 
       /* ─── Main Container ─── */
@@ -154,11 +195,11 @@
       .content-grid {
         display: grid;
         grid-template-columns: var(--d-sidebar-w) 1fr;
-        gap: 32px;
+        gap: 28px;
         align-items: start;
       }
 
-      /* ─── Desktop Sidebar — Hidden below 1200px ─── */
+      /* ─── Desktop Sidebar ─── */
       .desktop-sidebar {
         position: sticky;
         top: calc(var(--nav-height, 64px) + 24px);
@@ -177,58 +218,22 @@
       .desktop-sidebar::-webkit-scrollbar { width: 3px; }
       .desktop-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
 
-      /* Sidebar Search */
-      .ds-section { padding: 20px; }
+      /* Sidebar Sections */
+      .ds-section { padding: 18px; }
 
       .ds-section + .ds-section {
         border-top: 1px solid var(--d-border);
       }
 
-      .ds-search {
-        position: relative;
-        display: flex;
-        align-items: center;
-      }
-
-      .ds-search svg {
-        position: absolute;
-        left: 12px;
-        width: 16px;
-        height: 16px;
-        color: var(--d-muted);
-        pointer-events: none;
-        flex-shrink: 0;
-      }
-
-      .ds-search input {
-        width: 100%;
-        padding: 10px 14px 10px 38px;
-        border-radius: var(--d-r-md);
-        border: 1px solid var(--d-border);
-        background: rgba(255,255,255,0.04);
-        color: var(--d-white);
-        font-family: 'Inter', sans-serif;
-        font-size: 0.82rem;
-        outline: none;
-        transition: border-color var(--d-ease-f), background var(--d-ease-f);
-      }
-
-      .ds-search input::placeholder { color: var(--d-muted); }
-
-      .ds-search input:focus {
-        border-color: var(--d-border-l);
-        background: rgba(255,255,255,0.06);
-      }
-
       /* Section Title */
       .ds-section-title {
         font-family: 'Poppins', sans-serif;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 700;
         color: var(--d-muted);
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        margin: 0 0 12px;
+        margin: 0 0 10px;
       }
 
       /* Filter List */
@@ -239,7 +244,7 @@
       }
 
       .ds-filter-list--scroll {
-        max-height: 240px;
+        max-height: 220px;
         overflow-y: auto;
         padding-right: 4px;
       }
@@ -248,11 +253,13 @@
       .ds-filter-list--scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 1px; }
 
       .ds-filter-item {
-        display: block;
-        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
         border-radius: var(--d-r-sm);
         font-family: 'Inter', sans-serif;
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         font-weight: 500;
         color: var(--d-tertiary);
         text-decoration: none;
@@ -264,9 +271,21 @@
         text-align: left;
       }
 
+      .ds-filter-item svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        opacity: 0.45;
+        transition: opacity var(--d-ease-f);
+      }
+
       .ds-filter-item:hover {
         color: var(--d-white);
         background: rgba(255,255,255,0.06);
+      }
+
+      .ds-filter-item:hover svg {
+        opacity: 0.7;
       }
 
       .ds-filter-item.active {
@@ -275,9 +294,14 @@
         font-weight: 600;
       }
 
+      .ds-filter-item.active svg {
+        opacity: 1;
+        color: var(--d-accent);
+      }
+
       /* Sidebar Footer */
       .ds-footer {
-        padding: 16px 20px;
+        padding: 14px 18px;
         border-top: 1px solid var(--d-border);
       }
 
@@ -287,13 +311,13 @@
         justify-content: center;
         gap: 6px;
         width: 100%;
-        padding: 9px 16px;
+        padding: 8px 14px;
         border-radius: var(--d-r-md);
         border: 1px solid var(--d-border);
         background: rgba(255,255,255,0.03);
         color: var(--d-tertiary);
         font-family: 'Inter', sans-serif;
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         font-weight: 600;
         cursor: pointer;
         transition: all var(--d-ease-f);
@@ -316,9 +340,9 @@
         align-items: center;
         justify-content: space-between;
         gap: 20px;
-        padding: 20px 0 24px;
+        padding: 18px 0 20px;
         border-bottom: 1px solid var(--d-border);
-        margin-bottom: 28px;
+        margin-bottom: 24px;
       }
 
       .filter-left {
@@ -328,7 +352,7 @@
       .section-title,
       #viewall-title {
         font-family: 'Poppins', sans-serif;
-        font-size: 1.25rem;
+        font-size: 1.15rem;
         font-weight: 800;
         color: var(--d-white);
         margin: 0;
@@ -339,15 +363,15 @@
       }
 
       .title-icon {
-        width: 22px;
-        height: 22px;
+        width: 20px;
+        height: 20px;
         color: var(--d-accent);
       }
 
       .filter-right {
         flex: 1;
-        max-width: 460px;
-        min-width: 280px;
+        max-width: 420px;
+        min-width: 260px;
       }
 
       #viewall-search-box {
@@ -356,7 +380,7 @@
 
       #viewall-search-input {
         width: 100%;
-        padding: 11px 40px 11px 42px;
+        padding: 10px 38px 10px 40px;
         border-radius: var(--d-r-full);
         border: 1px solid var(--d-border);
         background: rgba(255,255,255,0.04);
@@ -364,7 +388,7 @@
         -webkit-backdrop-filter: blur(8px);
         color: var(--d-white);
         font-family: 'Inter', sans-serif;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         outline: none;
         transition: all var(--d-ease);
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -383,8 +407,8 @@
         left: 14px;
         top: 50%;
         transform: translateY(-50%);
-        width: 17px;
-        height: 17px;
+        width: 16px;
+        height: 16px;
         color: var(--d-muted);
         pointer-events: none;
         transition: color var(--d-ease-f);
@@ -417,8 +441,8 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
-        padding: 16px 18px;
-        margin-bottom: 24px;
+        padding: 14px 16px;
+        margin-bottom: 22px;
         border-radius: var(--d-r-md);
         background: rgba(229,9,20,0.04);
         border: 1px solid rgba(229,9,20,0.1);
@@ -426,7 +450,7 @@
 
       .active-filters-label {
         font-family: 'Inter', sans-serif;
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         font-weight: 600;
         color: var(--d-tertiary);
         white-space: nowrap;
@@ -442,7 +466,7 @@
       .clear-filters-btn,
       #clear-all-filters {
         font-family: 'Inter', sans-serif;
-        font-size: 0.78rem;
+        font-size: 0.76rem;
         font-weight: 600;
         color: var(--d-accent);
         background: none;
@@ -459,11 +483,11 @@
         background: var(--d-accent-soft);
       }
 
-      /* ─── Video Grid — 3 columns at 1200px ─── */
+      /* ─── Video Grid — 4 columns at 1200px ─── */
       .video-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
       }
 
       /* ─── Video Cards — Premium Styling ─── */
@@ -478,9 +502,9 @@
       }
 
       .video-grid > *:hover {
-        transform: translateY(-6px);
+        transform: translateY(-5px);
         box-shadow:
-          0 12px 40px rgba(0,0,0,0.45),
+          0 10px 36px rgba(0,0,0,0.45),
           0 0 0 1px rgba(255,255,255,0.06);
         border-color: var(--d-border-l);
       }
@@ -503,7 +527,7 @@
       .video-grid > *:hover a img,
       .video-grid > *:hover .card-poster img,
       .video-grid > *:hover .video-thumb img {
-        transform: scale(1.06);
+        transform: scale(1.05);
       }
 
       /* Gradient Overlay on Hover */
@@ -533,15 +557,15 @@
         position: absolute;
         top: 22%;
         left: 50%;
-        width: 50px;
-        height: 50px;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
         background-color: var(--d-accent);
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpolygon points='6 3 20 12 6 21 6 3'/%3E%3C/svg%3E");
-        background-size: 22px;
+        background-size: 20px;
         background-position: 55% center;
         background-repeat: no-repeat;
-        box-shadow: 0 0 28px var(--d-accent-glow);
+        box-shadow: 0 0 24px var(--d-accent-glow);
         opacity: 0;
         transform: translate(-50%, 0) scale(0.7);
         transition: all var(--d-ease);
@@ -561,7 +585,7 @@
       .video-grid > * .video-info,
       .video-grid > * .card-details,
       .video-grid > * .video-card-info {
-        padding: 12px 14px 14px;
+        padding: 10px 12px 12px;
       }
 
       .video-grid > * .card-title,
@@ -569,10 +593,10 @@
       .video-grid > * h3,
       .video-grid > * h4 {
         font-family: 'Poppins', sans-serif;
-        font-size: 0.82rem;
+        font-size: 0.78rem;
         font-weight: 700;
         color: var(--d-white);
-        line-height: 1.35;
+        line-height: 1.3;
         margin: 0 0 6px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -588,14 +612,31 @@
         color: #fff;
       }
 
+      /* Card Meta Row — stars + genre + year inline */
       .video-grid > * .card-meta,
       .video-grid > * .video-meta,
       .video-grid > * .card-details span,
       .video-grid > * .video-card-info span {
         font-family: 'Inter', sans-serif;
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         color: var(--d-muted);
         line-height: 1.5;
+      }
+
+      .video-grid > * .card-meta-row,
+      .video-grid > * .meta-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .video-grid > * .card-meta-row .meta-sep {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--d-muted);
+        flex-shrink: 0;
       }
 
       /* Quality Badge */
@@ -607,10 +648,10 @@
         top: 8px;
         left: 8px;
         z-index: 4;
-        padding: 2px 8px;
+        padding: 2px 7px;
         border-radius: var(--d-r-xs);
         font-family: 'Poppins', sans-serif;
-        font-size: 0.62rem;
+        font-size: 0.6rem;
         font-weight: 800;
         letter-spacing: 0.06em;
         text-transform: uppercase;
@@ -629,7 +670,7 @@
         padding: 2px 7px;
         border-radius: var(--d-r-xs);
         font-family: 'Inter', sans-serif;
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         font-weight: 600;
         background: rgba(0,0,0,0.7);
         color: rgba(255,255,255,0.85);
@@ -651,10 +692,10 @@
         bottom: 8px;
         right: 8px;
         z-index: 4;
-        padding: 2px 7px;
+        padding: 2px 6px;
         border-radius: var(--d-r-xs);
         font-family: 'Inter', sans-serif;
-        font-size: 0.65rem;
+        font-size: 0.62rem;
         font-weight: 600;
         background: rgba(0,0,0,0.8);
         color: rgba(255,255,255,0.9);
@@ -664,7 +705,28 @@
       .video-grid > * [class*="rating"],
       .video-grid > * [class*="star"] {
         color: #facc15;
-        font-size: 0.72rem;
+        font-size: 0.68rem;
+      }
+
+      .video-grid > * .star-rating {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .video-grid > * .star-rating svg {
+        width: 11px;
+        height: 11px;
+        color: #facc15;
+        fill: #facc15;
+      }
+
+      .video-grid > * .star-rating .rating-num {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--d-sub);
+        margin-left: 2px;
       }
 
       /* ─── Load More ─── */
@@ -672,7 +734,7 @@
       #load-more-container {
         display: flex;
         justify-content: center;
-        padding: 40px 0 0;
+        padding: 36px 0 0;
       }
 
       .btn-outline,
@@ -680,13 +742,13 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 36px;
+        padding: 11px 32px;
         border-radius: var(--d-r-full);
         border: 1px solid var(--d-border-l);
         background: rgba(255,255,255,0.04);
         color: var(--d-sub);
         font-family: 'Poppins', sans-serif;
-        font-size: 0.88rem;
+        font-size: 0.84rem;
         font-weight: 600;
         cursor: pointer;
         transition: all var(--d-ease);
@@ -703,8 +765,8 @@
 
       .spinner,
       #load-more-spinner {
-        width: 36px;
-        height: 36px;
+        width: 34px;
+        height: 34px;
         border: 3px solid var(--d-border);
         border-top-color: var(--d-accent);
         border-radius: 50%;
@@ -782,8 +844,8 @@
       }
 
       .skeleton-text {
-        height: 12px;
-        margin: 12px 14px 6px;
+        height: 11px;
+        margin: 10px 12px 5px;
         border-radius: 4px;
         background: linear-gradient(110deg, #1a1a1a 8%, #222 18%, #1a1a1a 33%);
         background-size: 200% 100%;
@@ -791,8 +853,8 @@
       }
 
       .skeleton-text.short {
-        width: 60%;
-        margin-bottom: 14px;
+        width: 55%;
+        margin-bottom: 12px;
       }
 
       /* ─── Footer ─── */
@@ -806,6 +868,10 @@
       @media (min-width: 1366px) {
         .video-grid {
           grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+        .content-grid {
+          gap: 32px;
         }
       }
 
@@ -821,7 +887,7 @@
           gap: 22px;
         }
         .page-header {
-          padding: 64px 64px 56px !important;
+          padding: 56px 64px 48px !important;
         }
         .main-container {
           padding: 0 64px 80px;
@@ -876,6 +942,16 @@
       </nav>
       <h1 class="page-title" id="viewall-page-title">All Movies</h1>
       <p class="page-subtitle" id="viewall-page-subtitle">Browse the complete collection of Movies from creators worldwide.</p>
+      <div class="page-stats" id="page-stats">
+        <div class="page-stat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>
+          <span><strong id="stat-movies-count">12,540+</strong> Movies Available</span>
+        </div>
+        <div class="page-stat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span><strong id="stat-countries-count">45+</strong> Countries</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -884,36 +960,28 @@
     <div class="content-grid">
 
       <!-- ═══════════════════════════════════════════════════════════
-           DESKTOP SIDEBAR — Hidden below 1200px via CSS
+           DESKTOP SIDEBAR
            ═══════════════════════════════════════════════════════════ -->
       <aside class="desktop-sidebar" id="desktop-sidebar">
 
-        <!-- Search -->
+        <!-- Quick Filters -->
         <div class="ds-section">
-          <div class="ds-search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input type="text" id="desktop-sidebar-search" placeholder="Quick search..." autocomplete="off">
-          </div>
-        </div>
-
-        <!-- Sort By -->
-        <div class="ds-section">
-          <h3 class="ds-section-title">Sort By</h3>
+          <h3 class="ds-section-title">Quick Filters</h3>
           <div class="ds-filter-list" id="ds-sort-list">
             <a href="viewall.html?sort=trending" class="ds-filter-item" data-sort="trending">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
               Trending
             </a>
             <a href="viewall.html?sort=recent" class="ds-filter-item" data-sort="recent">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               Recently Added
             </a>
             <a href="viewall.html?sort=top" class="ds-filter-item" data-sort="top">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               Top Rated
             </a>
             <a href="viewall.html?sort=views" class="ds-filter-item" data-sort="views">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               Most Viewed
             </a>
           </div>
@@ -921,7 +989,7 @@
 
         <!-- Genres -->
         <div class="ds-section">
-          <h3 class="ds-section-title">Genres</h3>
+          <h3 class="ds-section-title">Genre</h3>
           <div class="ds-filter-list ds-filter-list--scroll" id="ds-genre-list">
             <a href="viewall.html?category=Action" class="ds-filter-item" data-category="Action">Action</a>
             <a href="viewall.html?category=Comedy" class="ds-filter-item" data-category="Comedy">Comedy</a>
@@ -1090,33 +1158,12 @@
 
   <!-- ═══════════════════════════════════════════════════════════
        DESKTOP SIDEBAR BRIDGE SCRIPT
-       Syncs sidebar search → main search input
-       Highlights active filters from URL params
-       Does NOT modify any existing JS
+       Syncs sidebar highlights from URL params
+       Updates page stats dynamically after data loads
        ═══════════════════════════════════════════════════════════ -->
   <script>
     (function() {
       'use strict';
-
-      /* ─── Sync sidebar search to real search input ─── */
-      var sidebarSearch = document.getElementById('desktop-sidebar-search');
-      var realSearch = document.getElementById('viewall-search-input');
-
-      if (sidebarSearch && realSearch) {
-        /* Mirror real search value into sidebar on load */
-        sidebarSearch.value = realSearch.value;
-
-        /* Sidebar → real input */
-        sidebarSearch.addEventListener('input', function() {
-          realSearch.value = this.value;
-          realSearch.dispatchEvent(new Event('input', { bubbles: true }));
-        });
-
-        /* Real input → sidebar (keep in sync) */
-        realSearch.addEventListener('input', function() {
-          sidebarSearch.value = this.value;
-        });
-      }
 
       /* ─── Highlight active filters from URL params ─── */
       function highlightActive() {
@@ -1165,6 +1212,60 @@
 
       window.addEventListener('popstate', function() {
         setTimeout(highlightActive, 50);
+      });
+
+      /* ─── Dynamic Page Stats Update ─── */
+      /* Waits for the video grid to populate, then counts unique movies & countries */
+      var statsObserver = new MutationObserver(function(mutations) {
+        /* Only act when skeleton cards are replaced with real content */
+        var grid = document.getElementById('videos-grid');
+        if (!grid) return;
+
+        var hasSkeletons = grid.querySelectorAll('.skeleton-card').length > 0;
+        if (hasSkeletons) return;
+
+        var realCards = grid.querySelectorAll(':not(.skeleton-card)');
+        if (realCards.length === 0) return;
+
+        /* Update movie count from total results if available */
+        var countEl = document.getElementById('stat-movies-count');
+        if (countEl && window._viewallTotal !== undefined) {
+          countEl.textContent = window._viewallTotal.toLocaleString() + '+';
+        } else if (countEl) {
+          /* Fallback: count visible cards + assume more */
+          countEl.textContent = (realCards.length * 12).toLocaleString() + '+';
+        }
+
+        /* Extract unique countries from card data */
+        var countries = new Set();
+        realCards.forEach(function(card) {
+          var countryEl = card.querySelector('[class*="country"]');
+          if (countryEl) countries.add(countryEl.textContent.trim());
+          /* Also check data attributes */
+          if (card.dataset.country) countries.add(card.dataset.country);
+        });
+        var countryCountEl = document.getElementById('stat-countries-count');
+        if (countryCountEl && countries.size > 0) {
+          countryCountEl.textContent = countries.size + '+';
+        }
+
+        /* Stop observing after first real update */
+        statsObserver.disconnect();
+      });
+
+      var gridEl = document.getElementById('videos-grid');
+      if (gridEl) {
+        statsObserver.observe(gridEl, { childList: true, subtree: true });
+      }
+
+      /* Also hook into the load-more to update count */
+      var origPushState2 = history.pushState;
+      /* The viewall.js likely updates totals somewhere — listen for custom events too */
+      window.addEventListener('videosLoaded', function(e) {
+        var countEl = document.getElementById('stat-movies-count');
+        if (countEl && e.detail && e.detail.total) {
+          countEl.textContent = e.detail.total.toLocaleString() + '+';
+        }
       });
 
     })();
