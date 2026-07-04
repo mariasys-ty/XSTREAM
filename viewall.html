@@ -2,22 +2,857 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
- 
   <meta name="description" content="XStream — Browse all premium adult videos. Filter by category, sort by trending, views, or likes.">
   <meta name="keywords" content="adult videos, browse all, streaming, premium content, categories">
   <meta name="author" content="XStream">
   <meta property="og:title" content="XStream — Browse All Videos">
   <meta property="og:description" content="Explore all premium 18+ videos filtered and sorted your way.">
-   <link rel="icon" type="image/webp" sizes="16x16" href="https://ik.imagekit.io/s95tumxuk/IMG_2611.png">
- <link rel="icon" type="image/webp" sizes="32x32" href="https://ik.imagekit.io/s95tumxuk/IMG_2611.png">
- <link rel="apple-touch-icon" sizes="180x180" href="https://ik.imagekit.io/s95tumxuk/IMG_2610.png">
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" type="image/webp" sizes="16x16" href="https://ik.imagekit.io/s95tumxuk/IMG_2611.png">
+  <link rel="icon" type="image/webp" sizes="32x32" href="https://ik.imagekit.io/s95tumxuk/IMG_2611.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://ik.imagekit.io/s95tumxuk/IMG_2610.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <title>Browse All Movies — XStream</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/desktop.css">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       DESKTOP-ONLY STYLES — Activates at ≥1200px
+       Does NOT touch any style below 1200px
+       ═══════════════════════════════════════════════════════════ -->
+  <style>
+    @media (min-width: 1200px) {
+
+      /* ─── Design Tokens ─── */
+      :root {
+        --d-bg: #0a0a0a;
+        --d-card: #141414;
+        --d-card-hover: #1a1a1a;
+        --d-elevated: #1c1c1c;
+        --d-glass: rgba(20, 20, 20, 0.72);
+        --d-accent: #e50914;
+        --d-accent-hover: #ff1a25;
+        --d-accent-soft: rgba(229, 9, 20, 0.12);
+        --d-accent-glow: rgba(229, 9, 20, 0.3);
+        --d-white: #ffffff;
+        --d-sub: rgba(255, 255, 255, 0.7);
+        --d-tertiary: rgba(255, 255, 255, 0.45);
+        --d-muted: rgba(255, 255, 255, 0.25);
+        --d-faint: rgba(255, 255, 255, 0.08);
+        --d-border: rgba(255, 255, 255, 0.08);
+        --d-border-l: rgba(255, 255, 255, 0.14);
+        --d-r-xs: 4px;
+        --d-r-sm: 6px;
+        --d-r-md: 10px;
+        --d-r-lg: 14px;
+        --d-r-xl: 20px;
+        --d-r-full: 9999px;
+        --d-ease: 280ms ease;
+        --d-ease-f: 200ms ease;
+        --d-sidebar-w: 280px;
+      }
+
+      /* ─── Scrollbar ─── */
+      ::-webkit-scrollbar { width: 5px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+      * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+
+      /* ─── Navbar ─── */
+      .navbar {
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        background: rgba(10,10,10,0.85) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+      }
+
+      /* ─── Page Header — Cinematic Banner ─── */
+      .page-header {
+        position: relative;
+        padding: 56px 48px 48px !important;
+        overflow: hidden;
+        border-bottom: 1px solid var(--d-border);
+      }
+
+      .page-header::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 60% 50% at 20% 80%, rgba(229,9,20,0.06) 0%, transparent 70%),
+          radial-gradient(ellipse 40% 40% at 80% 20%, rgba(229,9,20,0.03) 0%, transparent 60%),
+          linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(10,10,10,0.4) 100%);
+        pointer-events: none;
+      }
+
+      .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, var(--d-accent) 50%, transparent 100%);
+        opacity: 0.3;
+      }
+
+      .page-header-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1480px;
+        margin: 0 auto;
+      }
+
+      .breadcrumb {
+        margin-bottom: 16px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+      }
+
+      .breadcrumb a {
+        color: var(--d-tertiary);
+        transition: color var(--d-ease-f);
+      }
+
+      .breadcrumb a:hover { color: var(--d-white); }
+
+      .breadcrumb-sep { color: var(--d-muted); margin: 0 8px; }
+
+      .breadcrumb-current { color: var(--d-sub); }
+
+      .page-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-weight: 900;
+        color: var(--d-white);
+        line-height: 1.1;
+        margin: 0 0 12px;
+        letter-spacing: -0.03em;
+      }
+
+      .page-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        color: var(--d-tertiary);
+        margin: 0;
+        max-width: 560px;
+        line-height: 1.6;
+      }
+
+      /* ─── Main Container ─── */
+      .main-container {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 0 48px 72px;
+      }
+
+      /* ─── Content Grid — Sidebar + Main ─── */
+      .content-grid {
+        display: grid;
+        grid-template-columns: var(--d-sidebar-w) 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+
+      /* ─── Desktop Sidebar — Hidden below 1200px ─── */
+      .desktop-sidebar {
+        position: sticky;
+        top: calc(var(--nav-height, 64px) + 24px);
+        max-height: calc(100vh - var(--nav-height, 64px) - 48px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-radius: var(--d-r-xl);
+        background: var(--d-glass);
+        backdrop-filter: blur(16px) saturate(140%);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+        border: 1px solid var(--d-border);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+        animation: dsFadeIn 0.45s ease both;
+      }
+
+      .desktop-sidebar::-webkit-scrollbar { width: 3px; }
+      .desktop-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 2px; }
+
+      /* Sidebar Search */
+      .ds-section { padding: 20px; }
+
+      .ds-section + .ds-section {
+        border-top: 1px solid var(--d-border);
+      }
+
+      .ds-search {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .ds-search svg {
+        position: absolute;
+        left: 12px;
+        width: 16px;
+        height: 16px;
+        color: var(--d-muted);
+        pointer-events: none;
+        flex-shrink: 0;
+      }
+
+      .ds-search input {
+        width: 100%;
+        padding: 10px 14px 10px 38px;
+        border-radius: var(--d-r-md);
+        border: 1px solid var(--d-border);
+        background: rgba(255,255,255,0.04);
+        color: var(--d-white);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.82rem;
+        outline: none;
+        transition: border-color var(--d-ease-f), background var(--d-ease-f);
+      }
+
+      .ds-search input::placeholder { color: var(--d-muted); }
+
+      .ds-search input:focus {
+        border-color: var(--d-border-l);
+        background: rgba(255,255,255,0.06);
+      }
+
+      /* Section Title */
+      .ds-section-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--d-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin: 0 0 12px;
+      }
+
+      /* Filter List */
+      .ds-filter-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .ds-filter-list--scroll {
+        max-height: 240px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+
+      .ds-filter-list--scroll::-webkit-scrollbar { width: 2px; }
+      .ds-filter-list--scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 1px; }
+
+      .ds-filter-item {
+        display: block;
+        padding: 8px 12px;
+        border-radius: var(--d-r-sm);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--d-tertiary);
+        text-decoration: none;
+        transition: all var(--d-ease-f);
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+
+      .ds-filter-item:hover {
+        color: var(--d-white);
+        background: rgba(255,255,255,0.06);
+      }
+
+      .ds-filter-item.active {
+        color: var(--d-accent);
+        background: var(--d-accent-soft);
+        font-weight: 600;
+      }
+
+      /* Sidebar Footer */
+      .ds-footer {
+        padding: 16px 20px;
+        border-top: 1px solid var(--d-border);
+      }
+
+      .ds-footer-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 9px 16px;
+        border-radius: var(--d-r-md);
+        border: 1px solid var(--d-border);
+        background: rgba(255,255,255,0.03);
+        color: var(--d-tertiary);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--d-ease-f);
+      }
+
+      .ds-footer-btn:hover {
+        color: var(--d-white);
+        background: rgba(255,255,255,0.06);
+        border-color: var(--d-border-l);
+      }
+
+      .ds-footer-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* ─── Filter Bar — Desktop ─── */
+      .filter-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px 0 24px;
+        border-bottom: 1px solid var(--d-border);
+        margin-bottom: 28px;
+      }
+
+      .filter-left {
+        flex-shrink: 0;
+      }
+
+      .section-title,
+      #viewall-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--d-white);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        white-space: nowrap;
+      }
+
+      .title-icon {
+        width: 22px;
+        height: 22px;
+        color: var(--d-accent);
+      }
+
+      .filter-right {
+        flex: 1;
+        max-width: 460px;
+        min-width: 280px;
+      }
+
+      #viewall-search-box {
+        position: relative;
+      }
+
+      #viewall-search-input {
+        width: 100%;
+        padding: 11px 40px 11px 42px;
+        border-radius: var(--d-r-full);
+        border: 1px solid var(--d-border);
+        background: rgba(255,255,255,0.04);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: var(--d-white);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+        transition: all var(--d-ease);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      }
+
+      #viewall-search-input::placeholder { color: var(--d-muted); }
+
+      #viewall-search-input:focus {
+        border-color: var(--d-accent);
+        background: rgba(255,255,255,0.06);
+        box-shadow: 0 2px 16px rgba(229,9,20,0.12);
+      }
+
+      #viewall-search-box .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 17px;
+        height: 17px;
+        color: var(--d-muted);
+        pointer-events: none;
+        transition: color var(--d-ease-f);
+      }
+
+      #viewall-search-input:focus ~ .search-icon { color: var(--d-accent); }
+
+      #viewall-search-clear {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--d-tertiary);
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 50%;
+        transition: all var(--d-ease-f);
+      }
+
+      #viewall-search-clear:hover {
+        color: var(--d-white);
+        background: rgba(255,255,255,0.08);
+      }
+
+      /* ─── Active Filters ─── */
+      .active-filters {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 16px 18px;
+        margin-bottom: 24px;
+        border-radius: var(--d-r-md);
+        background: rgba(229,9,20,0.04);
+        border: 1px solid rgba(229,9,20,0.1);
+      }
+
+      .active-filters-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--d-tertiary);
+        white-space: nowrap;
+      }
+
+      #active-filter-chips {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        flex: 1;
+      }
+
+      .clear-filters-btn,
+      #clear-all-filters {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--d-accent);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: var(--d-r-sm);
+        transition: background var(--d-ease-f);
+        white-space: nowrap;
+      }
+
+      .clear-filters-btn:hover,
+      #clear-all-filters:hover {
+        background: var(--d-accent-soft);
+      }
+
+      /* ─── Video Grid — 3 columns at 1200px ─── */
+      .video-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      /* ─── Video Cards — Premium Styling ─── */
+      .video-grid > * {
+        position: relative;
+        border-radius: var(--d-r-lg);
+        overflow: hidden;
+        background: var(--d-card);
+        border: 1px solid var(--d-border);
+        transition: transform var(--d-ease), box-shadow var(--d-ease), border-color var(--d-ease);
+        cursor: pointer;
+      }
+
+      .video-grid > *:hover {
+        transform: translateY(-6px);
+        box-shadow:
+          0 12px 40px rgba(0,0,0,0.45),
+          0 0 0 1px rgba(255,255,255,0.06);
+        border-color: var(--d-border-l);
+      }
+
+      /* Poster Image */
+      .video-grid > * img,
+      .video-grid > * a img,
+      .video-grid > * .card-poster img,
+      .video-grid > * .video-thumb img,
+      .video-grid > * .thumb-wrap img,
+      .video-grid > * div:first-child img {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s ease;
+      }
+
+      .video-grid > *:hover img,
+      .video-grid > *:hover a img,
+      .video-grid > *:hover .card-poster img,
+      .video-grid > *:hover .video-thumb img {
+        transform: scale(1.06);
+      }
+
+      /* Gradient Overlay on Hover */
+      .video-grid > *::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70%;
+        background: linear-gradient(
+          to top,
+          rgba(0,0,0,0.65) 0%,
+          rgba(0,0,0,0.2) 40%,
+          transparent 100%
+        );
+        opacity: 0;
+        transition: opacity var(--d-ease);
+        z-index: 2;
+        pointer-events: none;
+        border-radius: var(--d-r-lg) var(--d-r-lg) 0 0;
+      }
+
+      /* Play Icon on Hover */
+      .video-grid > *::after {
+        content: '';
+        position: absolute;
+        top: 22%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--d-accent);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpolygon points='6 3 20 12 6 21 6 3'/%3E%3C/svg%3E");
+        background-size: 22px;
+        background-position: 55% center;
+        background-repeat: no-repeat;
+        box-shadow: 0 0 28px var(--d-accent-glow);
+        opacity: 0;
+        transform: translate(-50%, 0) scale(0.7);
+        transition: all var(--d-ease);
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .video-grid > *:hover::before { opacity: 1; }
+
+      .video-grid > *:hover::after {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      /* Card Info Area */
+      .video-grid > * .card-info,
+      .video-grid > * .video-info,
+      .video-grid > * .card-details,
+      .video-grid > * .video-card-info {
+        padding: 12px 14px 14px;
+      }
+
+      .video-grid > * .card-title,
+      .video-grid > * .video-title,
+      .video-grid > * h3,
+      .video-grid > * h4 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--d-white);
+        line-height: 1.35;
+        margin: 0 0 6px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color var(--d-ease-f);
+      }
+
+      .video-grid > *:hover .card-title,
+      .video-grid > *:hover .video-title,
+      .video-grid > *:hover h3,
+      .video-grid > *:hover h4 {
+        color: #fff;
+      }
+
+      .video-grid > * .card-meta,
+      .video-grid > * .video-meta,
+      .video-grid > * .card-details span,
+      .video-grid > * .video-card-info span {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.72rem;
+        color: var(--d-muted);
+        line-height: 1.5;
+      }
+
+      /* Quality Badge */
+      .video-grid > * .badge,
+      .video-grid > * .quality-badge,
+      .video-grid > * [class*="quality"],
+      .video-grid > * [class*="badge"] {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 4;
+        padding: 2px 8px;
+        border-radius: var(--d-r-xs);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.62rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: var(--d-accent);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(229,9,20,0.35);
+      }
+
+      /* Country / Translated Badges */
+      .video-grid > * [class*="country"],
+      .video-grid > * [class*="translated"] {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 4;
+        padding: 2px 7px;
+        border-radius: var(--d-r-xs);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 600;
+        background: rgba(0,0,0,0.7);
+        color: rgba(255,255,255,0.85);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .video-grid > * [class*="translated"] {
+        background: rgba(59,130,246,0.2);
+        color: #60a5fa;
+        border-color: rgba(59,130,246,0.2);
+      }
+
+      /* Runtime Badge */
+      .video-grid > * [class*="duration"],
+      .video-grid > * [class*="runtime"] {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 4;
+        padding: 2px 7px;
+        border-radius: var(--d-r-xs);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        background: rgba(0,0,0,0.8);
+        color: rgba(255,255,255,0.9);
+      }
+
+      /* Rating Stars */
+      .video-grid > * [class*="rating"],
+      .video-grid > * [class*="star"] {
+        color: #facc15;
+        font-size: 0.72rem;
+      }
+
+      /* ─── Load More ─── */
+      .load-more-container,
+      #load-more-container {
+        display: flex;
+        justify-content: center;
+        padding: 40px 0 0;
+      }
+
+      .btn-outline,
+      #load-more-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 36px;
+        border-radius: var(--d-r-full);
+        border: 1px solid var(--d-border-l);
+        background: rgba(255,255,255,0.04);
+        color: var(--d-sub);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--d-ease);
+      }
+
+      .btn-outline:hover,
+      #load-more-btn:hover {
+        border-color: var(--d-accent);
+        color: var(--d-white);
+        background: var(--d-accent-soft);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 20px rgba(229,9,20,0.15);
+      }
+
+      .spinner,
+      #load-more-spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--d-border);
+        border-top-color: var(--d-accent);
+        border-radius: 50%;
+        animation: dsSpin 0.7s linear infinite;
+      }
+
+      /* ─── Empty State ─── */
+      .empty-state,
+      #no-videos {
+        text-align: center;
+        padding: 80px 24px;
+      }
+
+      .empty-state svg,
+      #no-videos svg {
+        color: var(--d-muted);
+        margin-bottom: 20px;
+        opacity: 0.5;
+      }
+
+      .empty-state h3,
+      #no-videos h3 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--d-white);
+        margin: 0 0 8px;
+      }
+
+      .empty-state p,
+      #no-videos p {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: var(--d-tertiary);
+        margin: 0;
+      }
+
+      .btn-accent {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 24px;
+        border-radius: var(--d-r-md);
+        background: var(--d-accent);
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all var(--d-ease);
+      }
+
+      .btn-accent:hover {
+        background: var(--d-accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(229,9,20,0.25);
+      }
+
+      /* ─── Skeleton Cards (desktop) ─── */
+      .skeleton-card {
+        border-radius: var(--d-r-lg);
+        overflow: hidden;
+        background: var(--d-card);
+        border: 1px solid var(--d-border);
+      }
+
+      .skeleton-thumb {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        background: linear-gradient(110deg, #1a1a1a 8%, #222 18%, #1a1a1a 33%);
+        background-size: 200% 100%;
+        animation: dsShimmer 1.5s linear infinite;
+      }
+
+      .skeleton-text {
+        height: 12px;
+        margin: 12px 14px 6px;
+        border-radius: 4px;
+        background: linear-gradient(110deg, #1a1a1a 8%, #222 18%, #1a1a1a 33%);
+        background-size: 200% 100%;
+        animation: dsShimmer 1.5s linear infinite;
+      }
+
+      .skeleton-text.short {
+        width: 60%;
+        margin-bottom: 14px;
+      }
+
+      /* ─── Footer ─── */
+      .footer {
+        border-top: 1px solid var(--d-border);
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         COLUMN BREAKPOINTS
+         ═══════════════════════════════════════════════════════════ */
+      @media (min-width: 1366px) {
+        .video-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      @media (min-width: 1920px) {
+        .main-container {
+          max-width: 1600px;
+        }
+        .content-grid {
+          gap: 40px;
+        }
+        .video-grid {
+          grid-template-columns: repeat(5, 1fr);
+          gap: 22px;
+        }
+        .page-header {
+          padding: 64px 64px 56px !important;
+        }
+        .main-container {
+          padding: 0 64px 80px;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════════
+         ANIMATIONS
+         ═══════════════════════════════════════════════════════════ */
+      @keyframes dsFadeIn {
+        from { opacity: 0; transform: translateX(-16px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      @keyframes dsSpin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes dsShimmer {
+        to { background-position: -200% 0; }
+      }
+    }
+
+    /* Reduced motion — all screens */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 <body data-page="viewall">
 
@@ -48,27 +883,135 @@
   <main class="main-container">
     <div class="content-grid">
 
+      <!-- ═══════════════════════════════════════════════════════════
+           DESKTOP SIDEBAR — Hidden below 1200px via CSS
+           ═══════════════════════════════════════════════════════════ -->
+      <aside class="desktop-sidebar" id="desktop-sidebar">
+
+        <!-- Search -->
+        <div class="ds-section">
+          <div class="ds-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="desktop-sidebar-search" placeholder="Quick search..." autocomplete="off">
+          </div>
+        </div>
+
+        <!-- Sort By -->
+        <div class="ds-section">
+          <h3 class="ds-section-title">Sort By</h3>
+          <div class="ds-filter-list" id="ds-sort-list">
+            <a href="viewall.html?sort=trending" class="ds-filter-item" data-sort="trending">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Trending
+            </a>
+            <a href="viewall.html?sort=recent" class="ds-filter-item" data-sort="recent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Recently Added
+            </a>
+            <a href="viewall.html?sort=top" class="ds-filter-item" data-sort="top">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Top Rated
+            </a>
+            <a href="viewall.html?sort=views" class="ds-filter-item" data-sort="views">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:-2px;margin-right:6px;opacity:0.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Most Viewed
+            </a>
+          </div>
+        </div>
+
+        <!-- Genres -->
+        <div class="ds-section">
+          <h3 class="ds-section-title">Genres</h3>
+          <div class="ds-filter-list ds-filter-list--scroll" id="ds-genre-list">
+            <a href="viewall.html?category=Action" class="ds-filter-item" data-category="Action">Action</a>
+            <a href="viewall.html?category=Comedy" class="ds-filter-item" data-category="Comedy">Comedy</a>
+            <a href="viewall.html?category=Drama" class="ds-filter-item" data-category="Drama">Drama</a>
+            <a href="viewall.html?category=Horror" class="ds-filter-item" data-category="Horror">Horror</a>
+            <a href="viewall.html?category=Thriller" class="ds-filter-item" data-category="Thriller">Thriller</a>
+            <a href="viewall.html?category=Romance" class="ds-filter-item" data-category="Romance">Romance</a>
+            <a href="viewall.html?category=Sci-Fi" class="ds-filter-item" data-category="Sci-Fi">Sci-Fi</a>
+            <a href="viewall.html?category=Fantasy" class="ds-filter-item" data-category="Fantasy">Fantasy</a>
+            <a href="viewall.html?category=Crime" class="ds-filter-item" data-category="Crime">Crime</a>
+            <a href="viewall.html?category=Documentary" class="ds-filter-item" data-category="Documentary">Documentary</a>
+            <a href="viewall.html?category=Animation" class="ds-filter-item" data-category="Animation">Animation</a>
+            <a href="viewall.html?category=Mystery" class="ds-filter-item" data-category="Mystery">Mystery</a>
+            <a href="viewall.html?category=War" class="ds-filter-item" data-category="War">War</a>
+            <a href="viewall.html?category=Musical" class="ds-filter-item" data-category="Musical">Musical</a>
+            <a href="viewall.html?category=Family" class="ds-filter-item" data-category="Family">Family</a>
+            <a href="viewall.html?category=Biography" class="ds-filter-item" data-category="Biography">Biography</a>
+            <a href="viewall.html?category=History" class="ds-filter-item" data-category="History">History</a>
+            <a href="viewall.html?category=Sport" class="ds-filter-item" data-category="Sport">Sport</a>
+            <a href="viewall.html?category=Western" class="ds-filter-item" data-category="Western">Western</a>
+            <a href="viewall.html?category=Adventure" class="ds-filter-item" data-category="Adventure">Adventure</a>
+          </div>
+        </div>
+
+        <!-- Country -->
+        <div class="ds-section">
+          <h3 class="ds-section-title">Country</h3>
+          <div class="ds-filter-list ds-filter-list--scroll" id="ds-country-list">
+            <a href="viewall.html?country=USA" class="ds-filter-item" data-country="USA">USA</a>
+            <a href="viewall.html?country=UK" class="ds-filter-item" data-country="UK">UK</a>
+            <a href="viewall.html?country=Korea" class="ds-filter-item" data-country="Korea">Korea</a>
+            <a href="viewall.html?country=Japan" class="ds-filter-item" data-country="Japan">Japan</a>
+            <a href="viewall.html?country=India" class="ds-filter-item" data-country="India">India</a>
+            <a href="viewall.html?country=France" class="ds-filter-item" data-country="France">France</a>
+            <a href="viewall.html?country=Germany" class="ds-filter-item" data-country="Germany">Germany</a>
+            <a href="viewall.html?country=China" class="ds-filter-item" data-country="China">China</a>
+            <a href="viewall.html?country=Spain" class="ds-filter-item" data-country="Spain">Spain</a>
+            <a href="viewall.html?country=Italy" class="ds-filter-item" data-country="Italy">Italy</a>
+            <a href="viewall.html?country=Canada" class="ds-filter-item" data-country="Canada">Canada</a>
+            <a href="viewall.html?country=Australia" class="ds-filter-item" data-country="Australia">Australia</a>
+            <a href="viewall.html?country=Thailand" class="ds-filter-item" data-country="Thailand">Thailand</a>
+            <a href="viewall.html?country=Brazil" class="ds-filter-item" data-country="Brazil">Brazil</a>
+            <a href="viewall.html?country=Mexico" class="ds-filter-item" data-country="Mexico">Mexico</a>
+          </div>
+        </div>
+
+        <!-- Year -->
+        <div class="ds-section">
+          <h3 class="ds-section-title">Year</h3>
+          <div class="ds-filter-list" id="ds-year-list">
+            <a href="viewall.html?year=2025" class="ds-filter-item" data-year="2025">2025</a>
+            <a href="viewall.html?year=2024" class="ds-filter-item" data-year="2024">2024</a>
+            <a href="viewall.html?year=2023" class="ds-filter-item" data-year="2023">2023</a>
+            <a href="viewall.html?year=2022" class="ds-filter-item" data-year="2022">2022</a>
+            <a href="viewall.html?year=2021" class="ds-filter-item" data-year="2021">2021</a>
+            <a href="viewall.html?year=2020" class="ds-filter-item" data-year="2020">2020</a>
+            <a href="viewall.html?year=older" class="ds-filter-item" data-year="older">Older</a>
+          </div>
+        </div>
+
+        <!-- Reset -->
+        <div class="ds-footer">
+          <button class="ds-footer-btn" onclick="window.location.href='viewall.html'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Reset All Filters
+          </button>
+        </div>
+      </aside>
+
       <!-- Main Column -->
       <div class="content-main">
 
-   <!-- Filter Bar -->
-<div class="filter-bar" id="filter-bar">
-  <div class="filter-left">
-    <h2 class="section-title" id="viewall-title">
-      <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      All Movies
-    </h2>
-  </div>
-  <div class="filter-right">
-    <div class="search-box" id="viewall-search-box">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="viewall-search-input" placeholder="Search movies by title, description, genre..." autocomplete="off">
-      <button id="viewall-search-clear" style="display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; padding:4px;" aria-label="Clear search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-  </div>
-</div>
+        <!-- Filter Bar -->
+        <div class="filter-bar" id="filter-bar">
+          <div class="filter-left">
+            <h2 class="section-title" id="viewall-title">
+              <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              All Movies
+            </h2>
+          </div>
+          <div class="filter-right">
+            <div class="search-box" id="viewall-search-box">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="viewall-search-input" placeholder="Search movies by title, description, genre..." autocomplete="off">
+              <button id="viewall-search-clear" style="display:none; position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--text-muted); cursor:pointer; padding:4px;" aria-label="Clear search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
 
         <!-- Active Search/Filters Display -->
         <div class="active-filters" id="active-filters" style="display:none;">
@@ -109,10 +1052,7 @@
         </section>
       </div>
 
-  
-      
-      </aside>
-     </div>
+    </div>
   </main>
 
   <!-- Footer -->
@@ -123,10 +1063,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-  <!-- Duplicate-app guard: patches initializeApp so the
-       second call (from app.js) silently reuses the first
-       app instead of throwing. Must run BEFORE any file
-       that calls firebase.initializeApp(). -->
+  <!-- Duplicate-app guard -->
   <script>
     (function () {
       var _orig = firebase.initializeApp;
@@ -144,11 +1081,94 @@
     })();
   </script>
 
-  <!-- Your JS files — order matters: utilities first, then app, then page -->
+  <!-- Your JS files — order matters -->
   <script src="js/optimizer.js"></script>
   <script src="js/threat.js"></script>
   <script src="config.js"></script>
   <script src="js/app.js"></script>
   <script src="js/viewall.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       DESKTOP SIDEBAR BRIDGE SCRIPT
+       Syncs sidebar search → main search input
+       Highlights active filters from URL params
+       Does NOT modify any existing JS
+       ═══════════════════════════════════════════════════════════ -->
+  <script>
+    (function() {
+      'use strict';
+
+      /* ─── Sync sidebar search to real search input ─── */
+      var sidebarSearch = document.getElementById('desktop-sidebar-search');
+      var realSearch = document.getElementById('viewall-search-input');
+
+      if (sidebarSearch && realSearch) {
+        /* Mirror real search value into sidebar on load */
+        sidebarSearch.value = realSearch.value;
+
+        /* Sidebar → real input */
+        sidebarSearch.addEventListener('input', function() {
+          realSearch.value = this.value;
+          realSearch.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
+        /* Real input → sidebar (keep in sync) */
+        realSearch.addEventListener('input', function() {
+          sidebarSearch.value = this.value;
+        });
+      }
+
+      /* ─── Highlight active filters from URL params ─── */
+      function highlightActive() {
+        var params = new URLSearchParams(window.location.search);
+
+        /* Sort */
+        var sort = params.get('sort');
+        document.querySelectorAll('#ds-sort-list .ds-filter-item').forEach(function(el) {
+          el.classList.toggle('active', el.dataset.sort === sort);
+        });
+
+        /* Genre */
+        var category = params.get('category');
+        document.querySelectorAll('#ds-genre-list .ds-filter-item').forEach(function(el) {
+          el.classList.toggle('active', el.dataset.category === category);
+        });
+
+        /* Country */
+        var country = params.get('country');
+        document.querySelectorAll('#ds-country-list .ds-filter-item').forEach(function(el) {
+          el.classList.toggle('active', el.dataset.country === country);
+        });
+
+        /* Year */
+        var year = params.get('year');
+        document.querySelectorAll('#ds-year-list .ds-filter-item').forEach(function(el) {
+          el.classList.toggle('active', el.dataset.year === year);
+        });
+      }
+
+      highlightActive();
+
+      /* Re-highlight when URL changes (pushState from viewall.js) */
+      var _pushState = history.pushState;
+      var _replaceState = history.replaceState;
+
+      history.pushState = function() {
+        _pushState.apply(history, arguments);
+        setTimeout(highlightActive, 50);
+      };
+
+      history.replaceState = function() {
+        _replaceState.apply(history, arguments);
+        setTimeout(highlightActive, 50);
+      };
+
+      window.addEventListener('popstate', function() {
+        setTimeout(highlightActive, 50);
+      });
+
+    })();
+  </script>
+
 </body>
 </html>
