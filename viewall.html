@@ -418,13 +418,13 @@
     .clear-filters-btn:hover { opacity: 0.7; }
 
     /* ══════════════════════════════════════════
-       VIDEO GRID — 6 COLUMNS
+       VIDEO GRID — 6 COLUMNS (SMALL CARDS)
        ══════════════════════════════════════════ */
     .video-grid {
       display: grid !important;
       grid-template-columns: repeat(6, 1fr);
-      gap: 22px;
-      padding: 32px 56px 48px;
+      gap: 12px;
+      padding: 20px 32px 40px;
       max-width: 1600px;
       margin: 0 auto;
       list-style: none;
@@ -432,7 +432,7 @@
 
     /* ── Skeleton Cards ── */
     .video-grid .skeleton-card {
-      border-radius: 12px;
+      border-radius: 8px;
       overflow: hidden;
       background: #181818;
       border: 1px solid rgba(255, 255, 255, 0.04);
@@ -442,12 +442,12 @@
       border-radius: 0;
     }
     .video-grid .skeleton-text {
-      margin: 12px;
-      border-radius: 6px;
+      margin: 8px 10px;
+      border-radius: 4px;
     }
     .video-grid .skeleton-text.short {
       width: 60% !important;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     /* ══════════════════════════════════════════
@@ -457,7 +457,7 @@
     .video-grid > .video-card,
     .video-grid > div:not(.skeleton-card) {
       background: #181818;
-      border-radius: 12px;
+      border-radius: 8px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.05);
       transition:
@@ -472,10 +472,10 @@
     .video-grid > a:hover,
     .video-grid > .video-card:hover,
     .video-grid > div:not(.skeleton-card):hover {
-      transform: translateY(-8px) scale(1.03);
+      transform: translateY(-4px) scale(1.02);
       box-shadow:
-        0 24px 64px rgba(0, 0, 0, 0.55),
-        0 0 40px rgba(229, 9, 20, 0.06);
+        0 16px 48px rgba(0, 0, 0, 0.55),
+        0 0 30px rgba(229, 9, 20, 0.06);
       border-color: rgba(255, 255, 255, 0.1);
       z-index: 2;
     }
@@ -510,8 +510,8 @@
     .video-grid > a:hover > div:first-child img,
     .video-grid > .video-card:hover > div:first-child img,
     .video-grid > div:not(.skeleton-card):hover > div:first-child img {
-      transform: scale(1.07);
-      filter: brightness(1.12);
+      transform: scale(1.06);
+      filter: brightness(1.1);
     }
 
     /* ── Duration Badge ── */
@@ -520,20 +520,20 @@
     .video-grid [class*="duration"],
     .video-grid [class*="time-badge"] {
       position: absolute !important;
-      bottom: 8px !important;
-      right: 8px !important;
+      bottom: 6px !important;
+      right: 6px !important;
       left: auto !important;
       top: auto !important;
-      padding: 2px 8px !important;
+      padding: 1px 6px !important;
       background: rgba(0, 0, 0, 0.88) !important;
-      border-radius: 5px !important;
+      border-radius: 4px !important;
       border: none !important;
       font-family: 'Inter', sans-serif !important;
-      font-size: 11px !important;
+      font-size: 10px !important;
       font-weight: 500 !important;
       color: #fff !important;
       z-index: 3 !important;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.2px;
     }
 
     /* ── Quality Badge ── */
@@ -542,21 +542,21 @@
     .video-grid [class*="quality"],
     .video-grid [class*="hd-badge"] {
       position: absolute !important;
-      top: 8px !important;
-      left: 8px !important;
+      top: 6px !important;
+      left: 6px !important;
       right: auto !important;
       bottom: auto !important;
-      padding: 2px 7px !important;
+      padding: 1px 5px !important;
       background: #E50914 !important;
-      border-radius: 4px !important;
+      border-radius: 3px !important;
       border: none !important;
       font-family: 'Poppins', sans-serif !important;
-      font-size: 9.5px !important;
+      font-size: 8px !important;
       font-weight: 700 !important;
       color: #fff !important;
       z-index: 3 !important;
       text-transform: uppercase !important;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
     }
 
     /* ── Card Title ── */
@@ -567,12 +567,12 @@
     .video-grid > a h3,
     .video-grid > .video-card h3 {
       font-family: 'Poppins', sans-serif !important;
-      font-size: 13.5px !important;
+      font-size: 11.5px !important;
       font-weight: 600 !important;
       color: #ffffff !important;
-      padding: 12px 12px 3px !important;
+      padding: 8px 10px 2px !important;
       margin: 0 !important;
-      line-height: 1.35 !important;
+      line-height: 1.3 !important;
       display: -webkit-box !important;
       -webkit-line-clamp: 2 !important;
       -webkit-box-orient: vertical !important;
@@ -588,10 +588,10 @@
     .video-grid > a .uploader,
     .video-grid > a .channel-name {
       font-family: 'Inter', sans-serif !important;
-      font-size: 12px !important;
+      font-size: 10px !important;
       font-weight: 400 !important;
       color: #888 !important;
-      padding: 1px 12px 6px !important;
+      padding: 0 10px 4px !important;
       margin: 0 !important;
       white-space: nowrap;
       overflow: hidden;
@@ -607,8 +607,8 @@
     .video-grid > a .card-meta {
       display: flex !important;
       flex-wrap: wrap !important;
-      gap: 5px !important;
-      padding: 0 12px !important;
+      gap: 3px !important;
+      padding: 0 10px !important;
       margin: 0 !important;
     }
     .video-grid .card-meta span,
@@ -616,16 +616,16 @@
     .video-grid .metadata span,
     .video-grid .card-details span,
     .video-grid > a .meta span {
-      padding: 3px 8px !important;
+      padding: 2px 5px !important;
       background: rgba(255, 255, 255, 0.07) !important;
       border: 1px solid rgba(255, 255, 255, 0.05) !important;
-      border-radius: 6px !important;
+      border-radius: 4px !important;
       font-family: 'Inter', sans-serif !important;
-      font-size: 10.5px !important;
+      font-size: 9px !important;
       font-weight: 500 !important;
       color: #aaa !important;
       white-space: nowrap !important;
-      line-height: 1.5 !important;
+      line-height: 1.4 !important;
       margin: 0 !important;
     }
     .video-grid .card-meta span:hover,
@@ -641,10 +641,10 @@
     .video-grid .genres,
     .video-grid > a .genre {
       font-family: 'Inter', sans-serif !important;
-      font-size: 11.5px !important;
+      font-size: 10px !important;
       font-weight: 400 !important;
       color: #666 !important;
-      padding: 6px 12px 0 !important;
+      padding: 3px 10px 0 !important;
       margin: 0 !important;
       white-space: nowrap;
       overflow: hidden;
@@ -658,11 +658,11 @@
     .video-grid > a .stats {
       display: flex !important;
       align-items: center !important;
-      gap: 14px !important;
-      padding: 8px 12px 12px !important;
+      gap: 8px !important;
+      padding: 5px 10px 8px !important;
       margin: 0 !important;
       font-family: 'Inter', sans-serif !important;
-      font-size: 11px !important;
+      font-size: 9.5px !important;
       font-weight: 400 !important;
       color: #555 !important;
     }
@@ -671,14 +671,14 @@
     .video-grid .stats span {
       display: inline-flex !important;
       align-items: center !important;
-      gap: 4px !important;
+      gap: 3px !important;
       margin: 0 !important;
     }
     .video-grid .card-stats svg,
     .video-grid .stats-row svg,
     .video-grid .stats svg {
-      width: 13px !important;
-      height: 13px !important;
+      width: 11px !important;
+      height: 11px !important;
       opacity: 0.5;
     }
 
@@ -687,7 +687,7 @@
        ══════════════════════════════════════════ */
     .load-more-container {
       text-align: center;
-      padding: 12px 56px 64px;
+      padding: 8px 32px 56px;
     }
     .btn-outline {
       display: inline-flex;
@@ -729,7 +729,7 @@
        ══════════════════════════════════════════ */
     .empty-state {
       text-align: center;
-      padding: 90px 56px;
+      padding: 90px 32px;
     }
     .empty-state svg {
       color: #2a2a2a;
