@@ -16,7 +16,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- ========== DESKTOP PREMIUM REDESIGN — 1024px+ ONLY ========== -->
 <!-- ========== DESKTOP PREMIUM REDESIGN — 1024px+ ONLY ========== -->
 <style>
   /* ── MOBILE-FIRST HERO ARTWORK (all screen sizes) ── */
@@ -417,17 +416,29 @@
     }
     .clear-filters-btn:hover { opacity: 0.7; }
 
-    /* ══════════════════════════════════════════
-       VIDEO GRID — 6 COLUMNS (SMALL CARDS)
-       ══════════════════════════════════════════ */
-    .video-grid {
+    /* ════════════════════════════════════════════════════════════
+       VIDEO GRID — 6 COLUMNS SMALL CARDS (FORCE OVERRIDE)
+       ════════════════════════════════════════════════════════════ */
+
+    /* === KILL any external grid rules first === */
+    .video-grid,
+    .content-main .video-grid,
+    .section .video-grid,
+    .content-grid .video-grid,
+    .main-container .video-grid,
+    body[data-page="viewall"] .video-grid {
       display: grid !important;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
-      padding: 20px 32px 40px;
-      max-width: 1600px;
-      margin: 0 auto;
-      list-style: none;
+      grid-template-columns: repeat(6, 1fr) !important;
+      grid-template-rows: auto !important;
+      gap: 12px !important;
+      padding: 20px 32px 40px !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      margin: 0 auto !important;
+      list-style: none !important;
+      box-sizing: border-box !important;
+      column-count: unset !important;
+      columns: unset !important;
     }
 
     /* ── Skeleton Cards ── */
@@ -451,32 +462,42 @@
     }
 
     /* ══════════════════════════════════════════
-       MOVIE CARDS
+       MOVIE CARDS — FORCE SMALL
        ══════════════════════════════════════════ */
     .video-grid > a,
     .video-grid > .video-card,
-    .video-grid > div:not(.skeleton-card) {
-      background: #181818;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+    .video-grid > div:not(.skeleton-card),
+    .video-grid > li {
+      background: #181818 !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.05) !important;
       transition:
         transform 0.3s ease,
         box-shadow 0.3s ease,
-        border-color 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      text-decoration: none;
-      color: inherit;
+        border-color 0.3s ease !important;
+      display: flex !important;
+      flex-direction: column !important;
+      text-decoration: none !important;
+      color: inherit !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      flex-basis: auto !important;
+      float: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
     }
     .video-grid > a:hover,
     .video-grid > .video-card:hover,
-    .video-grid > div:not(.skeleton-card):hover {
+    .video-grid > div:not(.skeleton-card):hover,
+    .video-grid > li:hover {
       transform: translateY(-4px) scale(1.02);
       box-shadow:
         0 16px 48px rgba(0, 0, 0, 0.55),
         0 0 30px rgba(229, 9, 20, 0.06);
-      border-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.1) !important;
       z-index: 2;
     }
 
@@ -486,30 +507,38 @@
     .video-grid .thumb-wrap,
     .video-grid > a > div:first-child,
     .video-grid > .video-card > div:first-child,
-    .video-grid > div:not(.skeleton-card) > div:first-child {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 2 / 3;
-      overflow: hidden;
-      background: #111;
+    .video-grid > div:not(.skeleton-card) > div:first-child,
+    .video-grid > li > div:first-child {
+      position: relative !important;
+      width: 100% !important;
+      aspect-ratio: 2 / 3 !important;
+      overflow: hidden !important;
+      background: #111 !important;
+      flex-shrink: 0 !important;
+      max-height: none !important;
+      height: auto !important;
     }
     .video-grid .card-thumb img,
     .video-grid .thumbnail img,
     .video-grid .thumb-wrap img,
     .video-grid > a > div:first-child img,
     .video-grid > .video-card > div:first-child img,
-    .video-grid > div:not(.skeleton-card) > div:first-child img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .video-grid > div:not(.skeleton-card) > div:first-child img,
+    .video-grid > li > div:first-child img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
       transition: transform 0.35s ease, filter 0.35s ease;
-      display: block;
+      display: block !important;
+      max-height: none !important;
+      min-height: 0 !important;
     }
     .video-grid > a:hover .card-thumb img,
     .video-grid > .video-card:hover .card-thumb img,
     .video-grid > a:hover > div:first-child img,
     .video-grid > .video-card:hover > div:first-child img,
-    .video-grid > div:not(.skeleton-card):hover > div:first-child img {
+    .video-grid > div:not(.skeleton-card):hover > div:first-child img,
+    .video-grid > li:hover > div:first-child img {
       transform: scale(1.06);
       filter: brightness(1.1);
     }
@@ -565,7 +594,8 @@
     .video-grid .title,
     .video-grid h3,
     .video-grid > a h3,
-    .video-grid > .video-card h3 {
+    .video-grid > .video-card h3,
+    .video-grid > li h3 {
       font-family: 'Poppins', sans-serif !important;
       font-size: 11.5px !important;
       font-weight: 600 !important;
@@ -586,7 +616,8 @@
     .video-grid .channel-name,
     .video-grid .channel,
     .video-grid > a .uploader,
-    .video-grid > a .channel-name {
+    .video-grid > a .channel-name,
+    .video-grid > li .uploader {
       font-family: 'Inter', sans-serif !important;
       font-size: 10px !important;
       font-weight: 400 !important;
@@ -604,7 +635,8 @@
     .video-grid .metadata,
     .video-grid .card-details,
     .video-grid > a .meta,
-    .video-grid > a .card-meta {
+    .video-grid > a .card-meta,
+    .video-grid > li .meta {
       display: flex !important;
       flex-wrap: wrap !important;
       gap: 3px !important;
@@ -615,7 +647,8 @@
     .video-grid .meta-row span,
     .video-grid .metadata span,
     .video-grid .card-details span,
-    .video-grid > a .meta span {
+    .video-grid > a .meta span,
+    .video-grid > li .meta span {
       padding: 2px 5px !important;
       background: rgba(255, 255, 255, 0.07) !important;
       border: 1px solid rgba(255, 255, 255, 0.05) !important;
@@ -639,7 +672,8 @@
     .video-grid .card-genre,
     .video-grid .genre-text,
     .video-grid .genres,
-    .video-grid > a .genre {
+    .video-grid > a .genre,
+    .video-grid > li .genre {
       font-family: 'Inter', sans-serif !important;
       font-size: 10px !important;
       font-weight: 400 !important;
@@ -655,7 +689,8 @@
     .video-grid .card-stats,
     .video-grid .stats-row,
     .video-grid .stats,
-    .video-grid > a .stats {
+    .video-grid > a .stats,
+    .video-grid > li .stats {
       display: flex !important;
       align-items: center !important;
       gap: 8px !important;
@@ -668,7 +703,8 @@
     }
     .video-grid .card-stats span,
     .video-grid .stats-row span,
-    .video-grid .stats span {
+    .video-grid .stats span,
+    .video-grid > li .stats span {
       display: inline-flex !important;
       align-items: center !important;
       gap: 3px !important;
