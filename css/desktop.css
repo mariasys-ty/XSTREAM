@@ -28,6 +28,19 @@
     flex-wrap: unset !important;
   }
 
+   /* ── FORCE GRID CHILDREN TO RESPECT GAP ── */
+.video-grid > *,
+.video-grid > li,
+.video-grid > a,
+.video-grid > div,
+.video-grid > .video-card,
+.video-grid > .movie-card,
+.video-grid > .card {
+  margin: 0 !important;
+  min-width: 0 !important;
+  width: auto !important;
+}
+
   /* ── CARD CONTAINER: flex column ── */
   body[data-page="viewall"] .main-container .content-main .section .video-grid > a,
   body[data-page="viewall"] .main-container .content-main .section .video-grid > .video-card,
