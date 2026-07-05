@@ -55,8 +55,8 @@
 @media (max-width: 1023px) {
 
   .translated-hero {
-    min-height: 200px;
-    border-radius: 14px;
+    min-height: 270px;
+    border-radius: 10px;
     margin: 16px 16px 0;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.03);
@@ -143,8 +143,8 @@
      HERO — Compact, Text LEFT, Image RIGHT
      ══════════════════════════════════════════ */
   body[data-page="translated"] .translated-hero {
-    min-height: 200px !important;
-    max-height: 200px !important;
+    min-height: 270px !important;
+    max-height: 270px !important;
     border-radius: 18px !important;
     margin: 20px auto 24px !important;
     max-width: 1600px !important;
@@ -152,7 +152,7 @@
     border: 1px solid rgba(255, 255, 255, 0.035) !important;
     overflow: hidden !important;
   }
-
+  
   body[data-page="translated"] .translated-hero::after {
     content: '' !important;
     position: absolute !important;
@@ -164,7 +164,7 @@
     z-index: 1 !important;
     pointer-events: none !important;
   }
-
+  
   /* Hero image — right side only */
   body[data-page="translated"] #translated-hero-image {
     width: 50% !important;
@@ -177,7 +177,7 @@
     opacity: 0.75 !important;
     z-index: 0 !important;
   }
-
+  
   /* Force content LEFT — override ALL style.css centering */
   body[data-page="translated"] .translated-hero .page-header-content,
   body[data-page="translated"] .translated-hero .hero-content {
@@ -186,9 +186,9 @@
     justify-content: center !important;
     align-items: flex-start !important;
     text-align: left !important;
-    padding: 20px 40px !important;
-    min-height: 200px !important;
-    max-height: 200px !important;
+    padding: 24px 44px !important;
+    min-height: 270px !important;
+    max-height: 270px !important;
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
@@ -201,7 +201,7 @@
     right: auto !important;
     transform: none !important;
   }
-
+  
   body[data-page="translated"] .translated-hero .hero-left {
     text-align: left !important;
     align-self: flex-start !important;
@@ -211,7 +211,7 @@
     margin: 0 !important;
     padding: 0 !important;
   }
-
+  
   body[data-page="translated"] .translated-hero .breadcrumb {
     display: flex !important;
     align-items: center !important;
@@ -221,7 +221,7 @@
     padding: 0 !important;
     width: fit-content !important;
   }
-
+  
   body[data-page="translated"] .translated-hero .page-title {
     font-family: 'Poppins', sans-serif !important;
     font-size: 28px !important;
@@ -237,7 +237,7 @@
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
   }
-
+  
   body[data-page="translated"] .translated-hero .page-subtitle {
     font-family: 'Inter', sans-serif !important;
     font-size: 13px !important;
@@ -249,7 +249,7 @@
     align-self: flex-start !important;
     max-width: 400px !important;
   }
-
+  
   /* Stats — compact inline */
   body[data-page="translated"] .translated-hero .hero-stats {
     display: flex !important;
@@ -257,7 +257,7 @@
     margin-top: 14px !important;
     align-self: flex-start !important;
   }
-
+  
   body[data-page="translated"] .hero-stat-card {
     display: flex !important;
     align-items: center !important;
@@ -269,18 +269,18 @@
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
     border-radius: 10px !important;
   }
-
+  
   body[data-page="translated"] .hero-stat-icon {
     font-size: 18px !important;
     line-height: 1 !important;
   }
-
+  
   body[data-page="translated"] .hero-stat-info {
     display: flex !important;
     flex-direction: column !important;
     gap: 1px !important;
   }
-
+  
   body[data-page="translated"] .hero-stat-number {
     font-family: 'Poppins', sans-serif !important;
     font-size: 15px !important;
@@ -289,7 +289,7 @@
     letter-spacing: -0.02em !important;
     line-height: 1.2 !important;
   }
-
+  
   body[data-page="translated"] .hero-stat-label {
     font-family: 'Inter', sans-serif !important;
     font-size: 9.5px !important;
