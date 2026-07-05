@@ -40,7 +40,12 @@
   min-width: 0 !important;
   width: auto !important;
 }
-
+.video-grid {
+  background: red !important;        /* should show red lines between cards */
+}
+.video-grid > * {
+  background: green !important;      /* cards turn green, red = your gap */
+}
   /* ── CARD CONTAINER: flex column ── */
   body[data-page="viewall"] .main-container .content-main .section .video-grid > a,
   body[data-page="viewall"] .main-container .content-main .section .video-grid > .video-card,
