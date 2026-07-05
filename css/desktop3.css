@@ -470,82 +470,162 @@
 
 
   /* ══════════════════════════════════════════
-     VIDEO GRID — 6 COLUMNS
+     VIDEO GRID — FORCED 6 COLUMNS (NUCLEAR)
      ══════════════════════════════════════════ */
+
+  /* Kill every possible grid override from style.css */
+  body[data-page="series"] .content-main .video-grid,
+  body[data-page="series"] #series-page-content .content-main .video-grid,
+  body[data-page="series"] #series-page-content .content-main .section .video-grid,
+  body[data-page="series"] .video-grid,
   .video-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 24px;
-    margin-top: 8px;
+    display: grid !important;
+    grid-template-columns: repeat(6, 1fr) !important;
+    grid-auto-rows: auto !important;
+    grid-auto-flow: row !important;
+    gap: 24px !important;
+    margin-top: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    column-count: unset !important;
+    columns: unset !important;
+  }
+
+  /* Nuke every child that could break the grid */
+  body[data-page="series"] .video-grid > *,
+  body[data-page="series"] .video-grid > a,
+  body[data-page="series"] .video-grid > .video-card,
+  body[data-page="series"] .content-main .video-grid > a,
+  body[data-page="series"] .content-main .video-grid > .video-card,
+  body[data-page="series"] #videos-grid > a,
+  body[data-page="series"] #videos-grid > .video-card,
+  .video-grid > a,
+  .video-grid > .video-card,
+  .video-grid > * {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    flex: none !important;
+    flex-basis: auto !important;
+    flex-grow: 0 !important;
+    flex-shrink: 1 !important;
+    column-span: none !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Nuke any inline width/height injected by JS */
+  body[data-page="series"] .video-grid > * [style*="width"],
+  body[data-page="series"] .video-grid > * [style*="min-width"],
+  body[data-page="series"] .video-grid > * [style*="max-width"] {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Nuke any image that could stretch the card */
+  body[data-page="series"] .video-grid img,
+  body[data-page="series"] .video-grid > * img,
+  .video-grid img {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: cover !important;
   }
 
 
   /* ══════════════════════════════════════════
      CARD DESIGN
      ══════════════════════════════════════════ */
+  body[data-page="series"] .video-grid > a,
+  body[data-page="series"] .video-grid > .video-card,
   .video-grid > a,
   .video-grid > .video-card {
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    display: block;
-    text-decoration: none;
-    color: inherit;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    background: rgba(255, 255, 255, 0.025) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    text-decoration: none !important;
+    color: inherit !important;
+    position: relative !important;
   }
 
+  body[data-page="series"] .video-grid > a:hover,
+  body[data-page="series"] .video-grid > .video-card:hover,
   .video-grid > a:hover,
   .video-grid > .video-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-8px) !important;
     box-shadow:
       0 24px 64px rgba(0, 0, 0, 0.55),
       0 0 0 1px rgba(230, 57, 70, 0.2),
-      0 0 40px rgba(230, 57, 70, 0.08);
-    border-color: rgba(230, 57, 70, 0.3);
-    background: rgba(255, 255, 255, 0.045);
+      0 0 40px rgba(230, 57, 70, 0.08) !important;
+    border-color: rgba(230, 57, 70, 0.3) !important;
+    background: rgba(255, 255, 255, 0.045) !important;
   }
 
+  body[data-page="series"] .video-grid > a img:first-child,
+  body[data-page="series"] .video-grid > .video-card img:first-child,
+  body[data-page="series"] .video-grid > a .card-thumb img,
+  body[data-page="series"] .video-grid > .video-card .card-thumb img,
   .video-grid > a img:first-child,
   .video-grid > .video-card img:first-child,
   .video-grid > a .card-thumb img,
   .video-grid > .video-card .card-thumb img {
-    border-radius: 0;
-    transition: transform 0.5s ease;
+    border-radius: 0 !important;
+    transition: transform 0.5s ease !important;
   }
 
+  body[data-page="series"] .video-grid > a:hover img:first-child,
+  body[data-page="series"] .video-grid > .video-card:hover img:first-child,
+  body[data-page="series"] .video-grid > a:hover .card-thumb img,
+  body[data-page="series"] .video-grid > .video-card:hover .card-thumb img,
   .video-grid > a:hover img:first-child,
   .video-grid > .video-card:hover img:first-child,
   .video-grid > a:hover .card-thumb img,
   .video-grid > .video-card:hover .card-thumb img {
-    transform: scale(1.05);
+    transform: scale(1.05) !important;
   }
 
+  body[data-page="series"] .video-grid > a .card-info,
+  body[data-page="series"] .video-grid > .video-card .card-info,
+  body[data-page="series"] .video-grid > a .card-details,
+  body[data-page="series"] .video-grid > .video-card .card-details,
   .video-grid > a .card-info,
   .video-grid > .video-card .card-info,
   .video-grid > a .card-details,
   .video-grid > .video-card .card-details {
-    padding: 14px 14px 16px;
+    padding: 14px 14px 16px !important;
   }
 
   /* Card fade-in animation */
+  body[data-page="series"] .video-grid > a,
+  body[data-page="series"] .video-grid > .video-card,
   .video-grid > a,
   .video-grid > .video-card {
-    animation: cardFadeUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation: cardFadeUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both !important;
   }
-  .video-grid > :nth-child(1)  { animation-delay: 0.04s; }
-  .video-grid > :nth-child(2)  { animation-delay: 0.08s; }
-  .video-grid > :nth-child(3)  { animation-delay: 0.12s; }
-  .video-grid > :nth-child(4)  { animation-delay: 0.16s; }
-  .video-grid > :nth-child(5)  { animation-delay: 0.20s; }
-  .video-grid > :nth-child(6)  { animation-delay: 0.24s; }
-  .video-grid > :nth-child(7)  { animation-delay: 0.28s; }
-  .video-grid > :nth-child(8)  { animation-delay: 0.32s; }
-  .video-grid > :nth-child(9)  { animation-delay: 0.36s; }
-  .video-grid > :nth-child(10) { animation-delay: 0.40s; }
-  .video-grid > :nth-child(11) { animation-delay: 0.44s; }
-  .video-grid > :nth-child(12) { animation-delay: 0.48s; }
-  .video-grid > :nth-child(n+13) { animation-delay: 0.52s; }
+  body[data-page="series"] .video-grid > :nth-child(1)  { animation-delay: 0.04s !important; }
+  body[data-page="series"] .video-grid > :nth-child(2)  { animation-delay: 0.08s !important; }
+  body[data-page="series"] .video-grid > :nth-child(3)  { animation-delay: 0.12s !important; }
+  body[data-page="series"] .video-grid > :nth-child(4)  { animation-delay: 0.16s !important; }
+  body[data-page="series"] .video-grid > :nth-child(5)  { animation-delay: 0.20s !important; }
+  body[data-page="series"] .video-grid > :nth-child(6)  { animation-delay: 0.24s !important; }
+  body[data-page="series"] .video-grid > :nth-child(7)  { animation-delay: 0.28s !important; }
+  body[data-page="series"] .video-grid > :nth-child(8)  { animation-delay: 0.32s !important; }
+  body[data-page="series"] .video-grid > :nth-child(9)  { animation-delay: 0.36s !important; }
+  body[data-page="series"] .video-grid > :nth-child(10) { animation-delay: 0.40s !important; }
+  body[data-page="series"] .video-grid > :nth-child(11) { animation-delay: 0.44s !important; }
+  body[data-page="series"] .video-grid > :nth-child(12) { animation-delay: 0.48s !important; }
+  body[data-page="series"] .video-grid > :nth-child(n+13) { animation-delay: 0.52s !important; }
 
   @keyframes cardFadeUp {
     from {
@@ -558,8 +638,9 @@
     }
   }
 
+  body[data-page="series"] .video-grid .skeleton-card,
   .video-grid .skeleton-card {
-    border-radius: 16px;
+    border-radius: 16px !important;
   }
 
 
