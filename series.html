@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/desktop3.css">
 </head>
 <body data-page="series">
 
@@ -22,9 +23,11 @@
   <div id="mobile-overlay" class="mobile-overlay"></div>
   <div id="mobile-menu" class="mobile-menu"></div>
 
-  <!-- Page Header -->
-  <section class="page-header">
-    <div class="page-header-content">
+<!-- Page Header — Cinematic Hero -->
+<section class="page-header series-hero">
+  <img id="series-hero-image" src="https://ik.imagekit.io/s95tumxuk/IMG_3556.png" alt="">
+  <div class="page-header-content hero-content">
+    <div class="hero-left">
       <nav class="breadcrumb" id="breadcrumb">
         <a href="index.html">Home</a>
         <span class="breadcrumb-sep">/</span>
@@ -32,8 +35,25 @@
       </nav>
       <h1 class="page-title" id="viewall-page-title">TV Series</h1>
       <p class="page-subtitle" id="viewall-page-subtitle">Browse complete TV series with all seasons and episodes in one place.</p>
+      <div class="hero-stats">
+        <div class="hero-stat-card">
+          <span class="hero-stat-icon">📺</span>
+          <div class="hero-stat-info">
+            <span class="hero-stat-number">3,245+</span>
+            <span class="hero-stat-label">TV Series</span>
+          </div>
+        </div>
+        <div class="hero-stat-card">
+          <span class="hero-stat-icon">🎬</span>
+          <div class="hero-stat-info">
+            <span class="hero-stat-number">28,450+</span>
+            <span class="hero-stat-label">Seasons</span>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- Main Content -->
   <main class="main-container" id="series-page-content">
@@ -51,6 +71,10 @@
             </h2>
           </div>
           <div class="filter-right">
+            <div class="filter-search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input type="text" id="filter-search" placeholder="Search series...">
+            </div>
             <select id="genre-filter" class="filter-select">
               <option value="all">All Genres</option>
               <option value="Action">Action</option>
@@ -152,8 +176,6 @@
           </div>
         </div>
 
-      
-
         <!-- Status Widget -->
         <div class="widget">
           <h3 class="widget-title">By Status</h3>
@@ -233,11 +255,25 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <!-- Step 2: Main App -->
-<script src="config.js"></script>
-<script src="js/app.js"></script>
+  <script src="config.js"></script>
+  <script src="js/app.js"></script>
 
   <!-- Step 3: Series Page Logic -->
   <script src="js/series.js"></script>
+
+  <!-- Wire filter-search to sidebar-search (new, does not modify existing JS) -->
+  <script>
+    (function() {
+      var fs = document.getElementById('filter-search');
+      var ss = document.getElementById('sidebar-search');
+      if (fs && ss) {
+        fs.addEventListener('input', function() {
+          ss.value = fs.value;
+          ss.dispatchEvent(new Event('input', {bubbles: true}));
+        });
+      }
+    })();
+  </script>
 
 </body>
 </html>
