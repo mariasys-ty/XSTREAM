@@ -748,7 +748,10 @@ function createVideoCard(videoData, size) {
   if (rated && rated !== 'N/A') metaBadges += '<span class="card-meta-rated">' + escapeHTML(rated) + '</span>';
   if (runtime && runtime !== 'N/A') metaBadges += '<span class="card-meta-runtime">' + escapeHTML(runtime) + '</span>';
   if (imdbRating && imdbRating !== 'N/A') metaBadges += '<span class="card-meta-imdb"><svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg> ' + escapeHTML(imdbRating) + '</span>';
-  
+  if (isTranslated && vjName) {
+  var cleanVjName = vjName.replace(/\s*-\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  metaBadges += '<span class="card-vj-name">' + escapeHTML(cleanVjName) + '</span>';
+}
   var metaHTML = metaBadges ? '<div class="card-meta-badges">' + metaBadges + '</div>' : '';
   
   /* Truncate genre if too long */
@@ -758,16 +761,13 @@ function createVideoCard(videoData, size) {
   
   var countryHTML = country ? '<span class="video-card-country">' + escapeHTML(country) + '</span>' : '';
   
-  /* VJ Name for translated movies */
-  var vjNameHTML = '';
-  if (isTranslated && vjName) {
-   vjNameHTML = '<span class="card-vj-name">' + escapeHTML(vjName) + '</span>';
-  }
-  
   /* Translated badge */
   var translatedBadge = isTranslated ?
     '<span class="card-translated-badge">Translated</span>' :
     '<span class="card-translated-badge card-translated-badge--non">Non Translated</span>';
+  
+  /* Stats row - only country now */
+  var statsHTML = countryHTML ? '<div class="video-card-stats">' + countryHTML + '</div>' : '';
   
   card.innerHTML = '<div class="video-card-thumb">' +
     '<img src="' + thumb + '" alt="' + safeTitle + '" loading="lazy" onerror="this.src=\'https://placehold.co/640x360/e63946/ffffff?text=No+Image\'">' +
@@ -787,15 +787,9 @@ function createVideoCard(videoData, size) {
     '</div>' +
     '<div class="video-card-body">' +
     '<h3 class="video-card-title">' + safeTitle + '</h3>' +
-    vjNameHTML +
     metaHTML +
     genreHTML +
-    '<div class="video-card-stats">' +
-    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ' + views + '</span>' +
-    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/></svg> ' + likes + '</span>' +
-    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/></svg> ' + dislikes + '</span>' +
-    countryHTML +
-    '</div>' +
+    statsHTML +
     '</div>';
   
   card.addEventListener('click', function() {
@@ -839,12 +833,12 @@ function createWidgetVideoItem(videoData) {
   var thumb = getThumbnailUrl(videoData);
   var title = videoData.title || 'Untitled';
   var views = formatNumber(videoData.views || 0);
-
+  
   var item = document.createElement('div');
   item.className = 'widget-video-item';
   item.innerHTML = '<div class="widget-video-thumb"><img src="' + thumb + '" alt="' + escapeHTML(title) + '" onerror="this.src=\'https://placehold.co/100x64/e63946/ffffff?text=No+Image\'"></div>' +
     '<div class="widget-video-info"><h4>' + escapeHTML(title) + '</h4><span>' + views + ' views</span></div>';
-
+  
   item.addEventListener('click', function() {
     window.location.href = 'video.html?id=' + id;
   });
