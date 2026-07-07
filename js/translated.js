@@ -267,47 +267,28 @@ function createTranslatedVideoCard(v) {
   var runtime = v.runtime || '';
   var director = v.director || '';
   var vjRaw = v.vjName || '';
-  var vjName = vjRaw.replace('vj-', 'VJ ');
+  var vjName = vjRaw.replace(/\s*-\s*/g, ' ').replace(/\s+/g, ' ').trim();
   var safeTitle = escapeHTML(title);
   var safeDesc = desc.length > 120 ? escapeHTML(desc.substring(0, 120)) + '...' : escapeHTML(desc);
   var isFav = AppState.favouriteVideos.indexOf(id) >= 0;
-
+  
   var card = document.createElement('article');
   card.className = 'video-card';
   card.setAttribute('role', 'link');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', title);
-
+  
   /* Meta badges */
   var metaBadges = '';
   if (year) metaBadges += '<span class="card-meta-year">' + escapeHTML(year) + '</span>';
   if (rated && rated !== 'N/A') metaBadges += '<span class="card-meta-rated">' + escapeHTML(rated) + '</span>';
   if (runtime && runtime !== 'N/A') metaBadges += '<span class="card-meta-runtime">' + escapeHTML(runtime) + '</span>';
   if (imdbRating && imdbRating !== 'N/A') metaBadges += '<span class="card-meta-imdb"><svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01z"/></svg> ' + escapeHTML(imdbRating) + '</span>';
-
-  /* Genre */
-  var genreDisplay = genre;
-  if (genreDisplay.length > 40) genreDisplay = genreDisplay.substring(0, 40) + '...';
-  var genreHTML = genre ? '<span class="card-meta-genre">' + escapeHTML(genreDisplay) + '</span>' : '';
-
-  /* Director */
-  var directorHTML = director ? '<span class="card-meta-genre">' + escapeHTML('Dir: ' + director) + '</span>' : '';
-
-  /* Description */
-  var descHTML = desc ? '<p class="video-card-desc">' + safeDesc + '</p>' : '';
-
+  if (vjName) metaBadges += '<span class="card-vj-name">' + escapeHTML(vjName) + '</span>';
+  
   /* Country badge */
   var countryHTML = country ? '<span class="video-card-country">' + escapeHTML(country) + '</span>' : '';
-
-  /* VJ name badge */
-  var vjHTML = '';
-  if (vjRaw) {
-    vjHTML = '<div style="margin-bottom:6px;display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.2);border-radius:20px;font-size:0.75rem;font-weight:600;color:#e63946;">' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2" width="13" height="13"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-      '<span>' + escapeHTML(vjName) + '</span>' +
-      '</div>';
-  }
-
+  
   card.innerHTML =
     '<div class="video-card-thumb">' +
     '<img src="' + thumb + '" alt="' + safeTitle + '" loading="lazy" onerror="this.src=\'https://placehold.co/640x360/e63946/ffffff?text=No+Image\'">' +
@@ -326,19 +307,10 @@ function createTranslatedVideoCard(v) {
     '</div>' +
     '<div class="video-card-body">' +
     '<h3 class="video-card-title">' + safeTitle + '</h3>' +
-    vjHTML +
     (metaBadges ? '<div class="card-meta-badges">' + metaBadges + '</div>' : '') +
-    genreHTML +
-    directorHTML +
-    descHTML +
-    '<div class="video-card-stats">' +
-    countryHTML +
-    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ' + views + '</span>' +
-    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/></svg> ' + likes + '</span>' +
-    '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/></svg> ' + dislikes + '</span>' +
-    '</div>' +
+    (countryHTML ? '<div class="video-card-stats">' + countryHTML + '</div>' : '') +
     '</div>';
-
+  
   /* Click to navigate to video.html */
   card.addEventListener('click', function(e) {
     if (e.target.closest('.card-action-btn')) return;
@@ -347,7 +319,7 @@ function createTranslatedVideoCard(v) {
   card.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') window.location.href = 'video.html?id=' + id + '&source=translated';
   });
-
+  
   /* Favourite button */
   var favBtn = card.querySelector('.fav-btn');
   if (favBtn) {
@@ -363,7 +335,7 @@ function createTranslatedVideoCard(v) {
       if (svg) svg.setAttribute('fill', this.classList.contains('active') ? 'currentColor' : 'none');
     });
   }
-
+  
   /* Download button */
   var dlBtn = card.querySelector('.dl-btn');
   if (dlBtn) {
@@ -377,7 +349,7 @@ function createTranslatedVideoCard(v) {
       handleFileDownload(url, this.dataset.title || 'video');
     });
   }
-
+  
   return card;
 }
 
